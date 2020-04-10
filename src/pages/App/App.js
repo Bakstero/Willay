@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import PrivateRoute from '../../components/Routing/PrivateRoute'
 import PublicRoute from '../../components/Routing/PublicRoute'
 import {firebaseAuth}  from '../../components/Firebase/firebase'
-import * as ROUTES from  '../../constants/routes'
+import * as ROUTE from  '../../constants/routes'
 import HomePage from '../Home'
 import UserPage from '../UserPage'
 import SignUp from '../SignUp'
@@ -41,11 +41,11 @@ export class App extends Component {
       <Router>
         <div>
           <Switch>
-            <Route path={ROUTES.INDEX} exact component={IndexPage} />
-            <PublicRoute authed={this.state.authed} path={ROUTES.USER} component={UserPage} />
-            <PublicRoute authed={this.state.authed} path={ROUTES.SIGN_UP} component={SignUp} />
-            <PublicRoute authed={this.state.authed} path={ROUTES.SIGN_IN} component={SignIn} />
-            <PrivateRoute exact authed={this.state.authed} path={ROUTES.HOME} component={HomePage} />
+            <Route path={ROUTE.INDEX} exact component={IndexPage} />
+            <PublicRoute authed={this.state.authed} path={ROUTE.USER} component={UserPage} />
+            <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_UP} component={SignUp} />
+            <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_IN} component={SignIn} />
+            <PrivateRoute exact authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />
             <Route render={() => <h1>404</h1>} />
           </Switch>
         </div>

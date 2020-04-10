@@ -1,9 +1,10 @@
 import React from 'react'
+import SignInForm from '../components/SignIn/index'
 
 function SignIn() {
 	return (
 		<div>
-			<h1>SignIn</h1>
+			< SignInForm />
 		</div>
 	)
 }
