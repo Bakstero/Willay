@@ -6,7 +6,9 @@ export class index extends Component {
 		return (
 			<div>
 				<div>Helo world</div>
-				<Link to='/home'><h1>Go to home</h1></Link>
+				<Link to='/home'><h1>Go to home(private)</h1></Link>
+				<Link to='/signup'><h1>singup</h1></Link>
+				<Link to='/signin'><h1>singin</h1></Link>
 			</div>
 		)
 	}
