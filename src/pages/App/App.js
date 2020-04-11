@@ -42,7 +42,7 @@ export class App extends Component {
         <div>
           <Switch>
             <Route path={ROUTE.INDEX} exact component={IndexPage} />
-            <PublicRoute authed={this.state.authed} path={ROUTE.USER} component={UserPage} />
+            <Route authed={this.state.authed} path={ROUTE.USER} component={UserPage} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_UP} component={SignUp} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_IN} component={SignIn} />
             <PrivateRoute exact authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />

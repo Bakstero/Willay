@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import firebase from '../components/Firebase/firebase'
+import firebase from '../Firebase/firebase'
 import { Link } from 'react-router-dom'
-class UserPage extends Component {
+class UserPageForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -48,4 +48,4 @@ class UserPage extends Component {
 		)
 	}
 }
-export default UserPage
+export default UserPageForm

@@ -47,7 +47,7 @@ export default class SignInForm extends Component {
 	};
 
 	render() {
-		const { email, password, errors, error, PssError } = this.state;
+		const { email, password, error, PssError } = this.state;
 		return (
 			<div >
 				<h1>Login</h1>
