@@ -5,12 +5,33 @@ export default class SignInForm extends Component {
 	state = {
 		email: '',
 		password: '',
-		TextError: '',
+		errors: [],
+		PssError: '',
 		error: false,
+	}
+
+	formIsEmpty = ({email, password }) => {
+		return !email.length || !password.length;
+	}
+
+	displayErrors = errors => errors.map((error, i) => <p key={i}>{error.message}</p>)
+
+	isFormValid = () => {
+		let errors = [];
+		let error;
+
+		if (this.formIsEmpty(this.state)) {
+			error = { message: 'Fill all fields' }
+			this.setState({ errors: errors.concat(error) })
+			return false
+		} else {
+			return true
+		}
 	}
 
 	handleSubmit = event => {
 		event.preventDefault()
+		if (this.isFormValid()) {
 		firebase
 			.auth()
 			.signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -18,10 +39,11 @@ export default class SignInForm extends Component {
 				console.log(err)
 				console.log(err.message)
 				this.setState({
+					PssError: err.message,
 					error: true,
-					TextError: err.message
 				})
-			})
+				})
+		}
 	}
 
 	handleChange = event => {
@@ -29,7 +51,7 @@ export default class SignInForm extends Component {
 	};
 
 	render() {
-		const { email, password } = this.state;
+		const { email, password, errors, error, PssError } = this.state;
 		return (
 			<div >
 				<h1>Login</h1>
@@ -50,11 +72,18 @@ export default class SignInForm extends Component {
 					<button type="submit">Login</button>
 				</form>
 				<div>
-					{this.state.error === true
+					{errors.length > 0 && (
+						<div >
+							<h3>Error</h3>
+							{this.displayErrors(errors)}
+						</div>
+					)}
+					{error === true
 						?
-						<h5>{this.state.TextError}</h5>
-						: null
-					}
+						<div>
+							<h3>{PssError}</h3>
+						</div>
+						: null}
 				</div>
 			</div>
 		)

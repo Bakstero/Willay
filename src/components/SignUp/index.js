@@ -10,11 +10,48 @@ class SignUpForm extends Component {
 		passwordConfirmation: '',
 		photoURL: '',
 		usersRef: firebase.firestore().collection('users'),
+		errors: [],
 	}
+
+	formIsEmpty = ({ userName, email, password, passwordConfirmation }) => {
+		return !userName.length || !email.length || !password.length || !passwordConfirmation.length;
+	}
+
+	isPasswordValid = (password, passwordConfirmation) => {
+		if(password < 5 || passwordConfirmation < 5) {
+			return false
+		} else if ( password !== passwordConfirmation ) {
+			return false
+		} else {
+			return true
+		}
+	}
+
+	displayErrors = errors => errors.map((error, i) => <p key={i}>{error.message}</p>)
+
+	isFormValid = () => {
+		let errors = [];
+		let error;
+
+		if(this.formIsEmpty(this.state)) {
+			error = {message: 'Fill all fields'}
+			this.setState({ errors: errors.concat(error) })
+			return false
+		} else if (!this.isPasswordValid()) {
+			error = { message: 'Password is invalid' }
+			this.setState({ errors: errors.concat(error) })
+			return false
+		} else {
+			return true
+		}
+	}
+
+
 
 
 	handleSubmit = event => {
 		event.preventDefault()
+		if(this.isFormValid()){
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -34,6 +71,8 @@ class SignUpForm extends Component {
 					console.log(err.message)
 				})
 			})
+		}
+
 	}
 
 	handleChange = event => {
@@ -50,7 +89,7 @@ class SignUpForm extends Component {
 	}
 
 	render() {
-		const { userName, email, password, passwordConfirmation } = this.state;
+		const { userName, email, password, passwordConfirmation, errors } = this.state;
 		return (
 			<div >
 				<h1>Register</h1>
@@ -93,6 +132,14 @@ class SignUpForm extends Component {
 					</div>
 					<button type="submit">Register</button>
 				</form>
+				<div>
+					{errors.length > 0 && (
+						<div >
+							<h3>Error</h3>
+							{this.displayErrors(errors)}
+						</div>
+					)}
+				</div>
 			</div>
 		)
 	}
