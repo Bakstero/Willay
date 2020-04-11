@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import firebase from '../components/Firebase/firebase'
 import { Link } from 'react-router-dom'
+import AllUsers from '../components/Homepage/AllUsers'
 class UserPage extends Component {
 	constructor(props) {
 		super(props);
@@ -10,9 +11,20 @@ class UserPage extends Component {
 		};
 	}
 
-	componentDidMount() {
-		const userAuth = firebase.auth().currentUser;
+	EditUser = () => {
+		const userAuth = firebase.auth().currentUser.displayName;
+		if (userAuth !== this.props.match.params.id) {
+			this.setState ({
+				isEdit: false
+			})
+		} else {
+			this.setState ({
+				isEdit: true
+			})
+		}
+	}
 
+	GetUserData = () => {
 		const ref = firebase.firestore().collection('users').doc(this.props.match.params.id);
 		ref.get().then((doc) => {
 			if (doc.exists) {
@@ -20,14 +32,21 @@ class UserPage extends Component {
 					user: doc.data(),
 					key: doc.id,
 				});
-				if (userAuth.uid === this.state.user.userUid) {
-					this.setState({
-						isEdit: true,
-					})
-				}
 			}
+			this.EditUser()
 		});
 	}
+
+	componentDidMount () {
+		this.GetUserData()
+	}
+
+	componentDidUpdate () {
+		if (this.props.match.params.id !== this.state.user.userName) {
+			this.GetUserData()
+		}
+	}
+
 	render() {
 		return (
 			<div >
@@ -44,6 +63,7 @@ class UserPage extends Component {
 						null
 					}
 				</div>
+				<AllUsers />
 			</div>
 		)
 	}

@@ -13,6 +13,7 @@ class AllUsers extends Component {
 		};
 	}
 
+
 	onCollectionUpdate = (querySnapshot) => {
 		const users = [];
 		querySnapshot.forEach((doc) => {
