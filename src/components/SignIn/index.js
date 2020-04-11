@@ -5,7 +5,6 @@ export default class SignInForm extends Component {
 	state = {
 		email: '',
 		password: '',
-		errors: [],
 		PssError: '',
 		error: false,
 	}
@@ -14,15 +13,12 @@ export default class SignInForm extends Component {
 		return !email.length || !password.length;
 	}
 
-	displayErrors = errors => errors.map((error, i) => <p key={i}>{error.message}</p>)
-
 	isFormValid = () => {
-		let errors = [];
-		let error;
-
 		if (this.formIsEmpty(this.state)) {
-			error = { message: 'Fill all fields' }
-			this.setState({ errors: errors.concat(error) })
+			this.setState({
+				PssError: 'Fill all fields',
+				error: true,
+			 })
 			return false
 		} else {
 			return true
@@ -72,12 +68,6 @@ export default class SignInForm extends Component {
 					<button type="submit">Login</button>
 				</form>
 				<div>
-					{errors.length > 0 && (
-						<div >
-							<h3>Error</h3>
-							{this.displayErrors(errors)}
-						</div>
-					)}
 					{error === true
 						?
 						<div>
