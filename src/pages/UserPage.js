@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import firebase from '../components/Firebase/firebase'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import AllUsers from '../components/Homepage/AllUsers'
+
+const Avatar = styled.img`
+	width: 300px;
+	height: 300px;
+	border-radius: 50%;
+`
+
 class UserPage extends Component {
 	constructor(props) {
 		super(props);
@@ -11,14 +19,14 @@ class UserPage extends Component {
 		};
 	}
 
-	EditUser = () => {
+	EditUserButton = () => {
 		const userAuth = firebase.auth().currentUser.displayName;
 		if (userAuth !== this.props.match.params.id) {
-			this.setState ({
+			this.setState({
 				isEdit: false
 			})
 		} else {
-			this.setState ({
+			this.setState({
 				isEdit: true
 			})
 		}
@@ -33,7 +41,7 @@ class UserPage extends Component {
 					key: doc.id,
 				});
 			}
-			this.EditUser()
+			this.EditUserButton()
 		});
 	}
 
@@ -51,7 +59,7 @@ class UserPage extends Component {
 		return (
 			<div >
 				<div>
-					<img src={this.state.user.avatar} alt='User Avatar' />
+					<Avatar src={this.state.user.avatar} alt='User Avatar' />
 					<h1>{this.state.user.userEmail}</h1>
 					<h1>{this.state.user.userName}</h1>
 				</div>

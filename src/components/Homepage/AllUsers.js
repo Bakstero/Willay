@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import firebase from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
+import styled from 'styled-components';
 
+const Avatar = styled.img`
+	width: 200px;
+	height: 200px;
+`
 
 class AllUsers extends Component {
 	constructor(props) {
@@ -12,7 +17,6 @@ class AllUsers extends Component {
 			users: []
 		};
 	}
-
 
 	onCollectionUpdate = (querySnapshot) => {
 		const users = [];
@@ -36,12 +40,11 @@ class AllUsers extends Component {
 	}
 
 	render() {
-
 		return (
 			<div >
 				<div>
 					{this.state.users.map(user =>
-						<Link to={`/user/${user.key}`} key={`${user.key}`}><img src={user.avatar} alt='' /></Link>
+						<Link to={`/user/${user.key}`} key={`${user.key}`}><Avatar src={user.avatar} alt='' /></Link>
 					)}
 				</div>
 			</div>

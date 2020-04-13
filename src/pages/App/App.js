@@ -6,6 +6,7 @@ import {firebaseAuth}  from '../../components/Firebase/firebase'
 import * as ROUTE from  '../../constants/routes'
 import HomePage from '../Home'
 import UserPage from '../UserPage'
+import EditUserPage from '../EditUserPage'
 import SignUp from '../SignUp'
 import SignIn from '../SignIn'
 import IndexPage from '../Index'
@@ -43,9 +44,10 @@ export class App extends Component {
           <Switch>
             <Route path={ROUTE.INDEX} exact component={IndexPage} />
             <Route authed={this.state.authed} path={ROUTE.USER} component={UserPage} />
+            <PrivateRoute exact authed={this.state.authed} path={ROUTE.EDIT} component={EditUserPage} />
+            <PrivateRoute exact authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_UP} component={SignUp} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_IN} component={SignIn} />
-            <PrivateRoute exact authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />
             <Route render={() => <h1>404</h1>} />
           </Switch>
         </div>

@@ -46,24 +46,22 @@ class SignUpForm extends Component {
 		}
 	}
 
-
-
-
 	handleSubmit = event => {
+		const { email, userName, password } = this.state;
 		event.preventDefault()
 		if(this.isFormValid()){
 		firebase
 			.auth()
-			.createUserWithEmailAndPassword(this.state.email, this.state.password)
+			.createUserWithEmailAndPassword(email, password)
 			.then(createdUser => {
 				createdUser.user.updateProfile({
-					displayName: this.state.userName,
+					displayName: userName,
 					photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSBFTlkikWa2vJOC88Yet3MiaVIqZbftnPCx3xH6CP0AYb-SKsl',
-					email: this.state.email,
+					email: email,
 				})
 				.then(() => {
 					this.saveUser(createdUser).then(() => {
-						console.log(createdUser)
+
 					})
 				})
 				.catch(err => {

@@ -24,6 +24,7 @@ export default class SignInForm extends Component {
 			return true
 		}
 	}
+x
 
 	handleSubmit = event => {
 		event.preventDefault()
