@@ -6,49 +6,55 @@ class EditUser extends Component {
 	state = {
 		userName: '',
 		photoURL: '',
+		defaultAvatar: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
 		usersRef: firebase.firestore().collection('users'),
 		userAuth: firebase.auth().currentUser.displayName,
-		AvatarEvent: '',
-		UserNameEvent: ''
+		userAvatarEvent: '',
+		defaultAvatarEvent: '',
+		userNameEvent: '',
+		ProgressUpolad: 0,
 	}
+
 	EditUserName = event => {
 		event.preventDefault()
 		if (!this.state.userName.length){
-			this.setState({ UserNameEvent: 'Form is empty' })
+			this.setState({ userNameEvent: 'Form is empty' })
 		} else {
 			this.state.usersRef.doc(this.state.userAuth).set({
-				userName: this.state.userName,
-			}, { merge: true })
-			this.setState({UserNameEvent: 'Nick changed!', userName: '' })
+				userName: this.state.userName,},{ merge: true })
+
+			this.setState({userNameEvent: 'Nick changed!', userName: '' })
 		}
 	}
 
-	EditUserAvatar = event => {
-		event.preventDefault()
-		if (!this.state.photoURL.length) {
-			this.setState({ AvatarEvent: 'Form is empty' })
-		} else {
-			this.state.usersRef.doc(this.state.userAuth).set({
-				avatar: this.state.photoURL,
-			}, { merge: true })
-			this.setState({UserNameEvent: 'Avatar changed!', photoURL: '' })
-		}
+	handleProgress = progress => {this.setState({ProgressUpolad: progress})}
+
+	handleUploadSuccess = filename => {
+		firebase.storage().ref('avatars').child(filename).getDownloadURL()
+			.then(url => this.setState({
+				photoURL: url,
+				ProgressUpolad: 100,
+				userAvatarEvent: 'Upload success!',
+			}))
+			.then(() => {
+				this.state.usersRef.doc(this.state.userAuth).set({
+					avatar: this.state.photoURL,
+				}, { merge: true })
+			})
+	}
+
+	handleSetDefaultAvatar = () => {
+		this.state.usersRef.doc(this.state.userAuth).set({
+			avatar: this.state.defaultAvatar,}, { merge: true })
+			.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
 	}
 
 	handleChange = event => {
 		this.setState({ [event.target.name]: event.target.value })
 	};
 
-	handleUploadSuccess = filename => {
-		firebase.storage().ref('avatars').child(filename).getDownloadURL()
-		.then(url => this.setState({
-			photoURL: url,
-		}))
-	}
-
-
 	render() {
-		const { userName, photoURL, AvatarEvent, UserNameEvent } = this.state;
+		const { userName, userAvatarEvent, defaultAvatarEvent, userNameEvent, ProgressUpolad } = this.state;
 		return (
 			<div >
 				<h1>Edit user</h1>
@@ -63,10 +69,10 @@ class EditUser extends Component {
 							value={userName} />
 					</div>
 					<button type="submit">Edit userName</button>
-					<div>{UserNameEvent}</div>
+					<div>{userNameEvent}</div>
 				</form>
 
-				<form onSubmit={this.EditUserAvatar}>
+				<div>
 					<div >
 						<label>Avatar</label>
 							<FileUploader
@@ -74,13 +80,38 @@ class EditUser extends Component {
 								name='image'
 								storageRef={firebase.storage().ref('avatars')}
 								onUploadSuccess={this.handleUploadSuccess}
+								onProgress={this.handleProgress}
 							/>
 					</div>
-					<button type="submit">Edit Avatar</button>
-					<div>{AvatarEvent}</div>
-				</form>
+
+					<div>
+						<h2>Progress:</h2>
+						<p>{ProgressUpolad}</p>
+						<p>{userAvatarEvent}</p>
+					</div>
+
+					<div>
+						<button onClick={this.handleSetDefaultAvatar}>Set default Avatar</button>
+						<p>{defaultAvatarEvent}</p>
+					</div>
+
+				</div>
 			</div>
 		)
 	}
 }
 export default EditUser
+
+/*
+EditUserAvatar = event => {
+	event.preventDefault()
+	if (!this.state.photoURL.length) {
+		this.setState({ AvatarEvent: 'Form is empty' })
+	} else {
+		this.state.usersRef.doc(this.state.userAuth).set({
+			avatar: this.state.photoURL,
+		}, { merge: true })
+		this.setState({ userNameEvent: 'Avatar changed!', photoURL: '' })
+	}
+}
+*/

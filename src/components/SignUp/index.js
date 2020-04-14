@@ -56,7 +56,7 @@ class SignUpForm extends Component {
 			.then(createdUser => {
 				createdUser.user.updateProfile({
 					displayName: userName,
-					photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSBFTlkikWa2vJOC88Yet3MiaVIqZbftnPCx3xH6CP0AYb-SKsl',
+					photoURL: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
 					email: email,
 				})
 				.then(() => {
