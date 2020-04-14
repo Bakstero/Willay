@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../Firebase/firebase'
-
+import FileUploader from 'react-firebase-file-uploader'
 
 class EditUser extends Component {
 	state = {
@@ -39,6 +39,14 @@ class EditUser extends Component {
 		this.setState({ [event.target.name]: event.target.value })
 	};
 
+	handleUploadSuccess = filename => {
+		firebase.storage().ref('avatars').child(filename).getDownloadURL()
+		.then(url => this.setState({
+			photoURL: url,
+		}))
+	}
+
+
 	render() {
 		const { userName, photoURL, AvatarEvent, UserNameEvent } = this.state;
 		return (
@@ -61,12 +69,12 @@ class EditUser extends Component {
 				<form onSubmit={this.EditUserAvatar}>
 					<div >
 						<label>Avatar</label>
-						<input
-							onChange={this.handleChange}
-							placeholder="Paste photo URL"
-							name="photoURL"
-							type="photoURL"
-							value={photoURL} />
+							<FileUploader
+								accept='image/*'
+								name='image'
+								storageRef={firebase.storage().ref('avatars')}
+								onUploadSuccess={this.handleUploadSuccess}
+							/>
 					</div>
 					<button type="submit">Edit Avatar</button>
 					<div>{AvatarEvent}</div>
