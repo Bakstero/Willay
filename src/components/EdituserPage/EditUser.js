@@ -22,7 +22,6 @@ class EditUser extends Component {
 		} else {
 			this.state.usersRef.doc(this.state.userAuth).set({
 				userName: this.state.userName,},{ merge: true })
-
 			this.setState({userNameEvent: 'Nick changed!', userName: '' })
 		}
 	}
@@ -82,12 +81,9 @@ class EditUser extends Component {
 								onUploadSuccess={this.handleUploadSuccess}
 								onProgress={this.handleProgress}
 							/>
-					</div>
-
-					<div>
-						<h2>Progress:</h2>
-						<p>{ProgressUpolad}</p>
-						<p>{userAvatarEvent}</p>
+							<h2>Progress:</h2>
+							<p>{ProgressUpolad}</p>
+							<p>{userAvatarEvent}</p>
 					</div>
 
 					<div>

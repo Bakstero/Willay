@@ -66,7 +66,7 @@ class UserPage extends Component {
 				<div>
 					{this.state.isEdit === true
 						?
-						<Link to={`/edit/${this.state.key}`}><button>Edit</button></Link>
+						<Link to={`/edit/user/${this.state.key}`}><button>Edit</button></Link>
 						:
 						null
 					}
