@@ -4,9 +4,13 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Avatar = styled.img`
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50%;
+		@media screen and (max-width: 1024px){
+	width: 40px;
+	height:40px;
+	}
 `
 
 class UserIcon extends Component {

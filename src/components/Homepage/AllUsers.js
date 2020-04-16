@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 	flex-direction: column;
 	align-items: center;
 	position:fixed;
-	right: 10%;
+	align-items:center;
 `
 
 const UserSection = styled.div`
@@ -17,14 +17,27 @@ const UserSection = styled.div`
 	background-color: #202020;
 	border-radius: 10px;
 	display: flex;
+	flex-direction:row;
 	margin-top: 20px;
+		@media screen and (max-width: 320px){
+			width: 150px;
+			height: 50px;
+	}
+		@media screen and (max-width: 500px){
+			width: 200px;
+			height: 75px;
+	}
 `
 const InsideSection = styled.div`
 	width: 100%;
 	height: 100px;
 	display: flex;
+	flex-direction:column;
 	align-items: center;
-	justify-content: center;
+
+		@media screen and (max-width: 320px){
+			font-size: 12px;
+	}
 `
 
 const UserLink = styled(Link)`
@@ -36,6 +49,14 @@ const UserAvatar = styled.img`
 	width: 100px;
 	height: 100px;
 	border-radius: 10px 0px 0px 10px;
+			@media screen and (max-width: 320px){
+			width: 50px;
+			height: 50px;
+	}
+			@media screen and (max-width: 500px){
+			width: 75px;
+			height: 75px;
+	}
 `
 
 class AllUsers extends Component {
