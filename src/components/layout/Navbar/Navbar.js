@@ -12,7 +12,7 @@ import { ReactComponent as Settings } from '../../Static/Icons/LeftSection/setti
 import { ReactComponent as Notification } from '../../Static/Icons/RightSection/notification.svg'
 
 const Wrapper = styled.div`
-	positon: fixed;
+	position: fixed;
 	width:100%;
 	height:60px;
 	background-color:#181818;
@@ -99,7 +99,7 @@ export class Navbar extends Component {
 		return (
 			<Wrapper>
 				<LogoDiv>
-					<Link to='/'><LogoIcon /></Link>
+					<Link to='/home'><LogoIcon /></Link>
 					<HamburgerMenu />
 				</LogoDiv>
 					<Ul>

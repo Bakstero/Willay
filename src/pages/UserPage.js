@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../components/Firebase/firebase'
+import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import AllUsers from '../components/Homepage/AllUsers'
@@ -58,6 +59,7 @@ class UserPage extends Component {
 	render() {
 		return (
 			<div >
+				<Navbar />
 				<div>
 					<Avatar src={this.state.user.avatar} alt='User Avatar' />
 					<h1>{this.state.user.userEmail}</h1>
@@ -71,7 +73,6 @@ class UserPage extends Component {
 						null
 					}
 				</div>
-				<AllUsers />
 			</div>
 		)
 	}
