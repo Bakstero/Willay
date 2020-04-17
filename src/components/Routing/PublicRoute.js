@@ -7,7 +7,7 @@ export default function PublicRoute({ component: Component, authed, ...rest }) {
 			{...rest}
 			render={(props) => authed === false
 				? <Component {...props} />
-				: <Redirect to={ROUTES.HOME} />} // '/dashboard' - gdzie ma isc po zalogowaniu
+				: <Redirect to={ROUTES.HOME} />} // route after logging in
 		/>
 	)
 }

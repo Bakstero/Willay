@@ -97,17 +97,3 @@ class EditUser extends Component {
 	}
 }
 export default EditUser
-
-/*
-EditUserAvatar = event => {
-	event.preventDefault()
-	if (!this.state.photoURL.length) {
-		this.setState({ AvatarEvent: 'Form is empty' })
-	} else {
-		this.state.usersRef.doc(this.state.userAuth).set({
-			avatar: this.state.photoURL,
-		}, { merge: true })
-		this.setState({ userNameEvent: 'Avatar changed!', photoURL: '' })
-	}
-}
-*/

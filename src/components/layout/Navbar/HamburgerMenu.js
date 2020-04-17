@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
 import MobileMenu from './MobileMenu'
-import UserIcon from '../userIcon/userIcon'
 
 const HamburgerDiv = styled.div`
 	display: none;
@@ -64,29 +63,29 @@ export class HamburgerMenu extends Component {
 
 	render() {
 		return (
-			<div>
-				<HamburgerDiv onClick={this.handleOpenNav} >
-				<Hamburger />
-				<Hamburger />
-				<Hamburger />
-			</HamburgerDiv>
-				{this.state.HamburgerButton === true
-				?
-					<MobileNav>
+			<>
+				{this.state.HamburgerButton === false
+					?
+					<HamburgerDiv onClick={this.handleOpenNav} >
+						<Hamburger />
+						<Hamburger />
+						<Hamburger />
+					</HamburgerDiv>
+					:
+					< MobileNav >
 						<HamburgerCloseDiv onClick={this.handleCloseBar} >
-							<Hamburger />
-							<Hamburger />
-							<Hamburger />
-						</HamburgerCloseDiv>
-						<MobileMenu />
-					</MobileNav>
-				:
-				null
-			}
-			</div>
-
+								<Hamburger />
+								<Hamburger />
+								<Hamburger />
+							</HamburgerCloseDiv>
+							<MobileMenu />
+					</MobileNav >
+				}
+			</>
 		)
 	}
 }
 
 export default HamburgerMenu
+
+

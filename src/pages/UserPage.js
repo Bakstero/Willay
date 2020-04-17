@@ -3,7 +3,6 @@ import firebase from '../components/Firebase/firebase'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import AllUsers from '../components/Homepage/AllUsers'
 
 const Avatar = styled.img`
 	width: 300px;
@@ -70,7 +69,7 @@ class UserPage extends Component {
 						?
 						<Link to={`/edit/user/${this.state.key}`}><button>Edit</button></Link>
 						:
-						null
+						null //In the future, there will be a "add friend" / "remove friend" button
 					}
 				</div>
 			</div>

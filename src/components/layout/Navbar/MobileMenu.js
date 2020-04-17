@@ -37,7 +37,7 @@ const Li = styled.li`
 			height:200px;
 			margin:10px;
 	}
-		@media screen and (max-width: 500px){
+		@media screen and (max-width: 700px){
 			width:170px;
 			height:120px;
 			margin:5px;
