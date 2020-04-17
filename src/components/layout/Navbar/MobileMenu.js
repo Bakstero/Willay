@@ -7,6 +7,7 @@ import { ReactComponent as Play } from '../../Static/Icons/LeftSection/play.svg'
 import { ReactComponent as Settings } from '../../Static/Icons/LeftSection/settings.svg'
 import { ReactComponent as Friends } from '../../Static/Icons/LeftSection/friends.svg'
 import styled from 'styled-components';
+import * as ROUTE from '../../../constants/routes'
 
 const Wrapper = styled.div`
 	width:100%;
@@ -94,14 +95,14 @@ export class MobileMenu extends Component {
 		return (
 			<Wrapper>
 				<Ul>
-					<LinkStyled to='/play'><Li><IconPlay /><H4>Search</H4></Li></LinkStyled>
-					<LinkStyled to='/gamelibary'><Li><IconGameLibary /><H4>Game Libary</H4></Li></LinkStyled>
-					<LinkStyled to='/blog'><Li><IconBlog /><H4>Blog</H4></Li></LinkStyled>
+					<LinkStyled to={ROUTE.PLAY}><Li><IconPlay /><H4>Search</H4></Li></LinkStyled>
+					<LinkStyled to={ROUTE.GAMELIBARY}><Li><IconGameLibary /><H4>Game Libary</H4></Li></LinkStyled>
+					<LinkStyled to={ROUTE.BLOG}><Li><IconBlog /><H4>Blog</H4></Li></LinkStyled>
 				</Ul>
 				<Ul>
-					<LinkStyled to='/developer'><Li><IconDeveloper /><H4>Developer</H4></Li></LinkStyled>
-					<LinkStyled to='/friends'><Li><IconFriends /><H4>Friends</H4></Li></LinkStyled>
-					<LinkStyled to='/settings'><Li><IconSettings /><H4>Settings</H4></Li></LinkStyled >
+					<LinkStyled to={ROUTE.DEVELOPER}><Li><IconDeveloper /><H4>Developer</H4></Li></LinkStyled>
+					<LinkStyled to={ROUTE.FRIENDS}><Li><IconFriends /><H4>Friends</H4></Li></LinkStyled>
+					<LinkStyled to={ROUTE.SETTINGS}><Li><IconSettings /><H4>Settings</H4></Li></LinkStyled >
 				</Ul>
 			</Wrapper>
 		)
