@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
 import firebase from '../Firebase/firebase'
+import {Link} from 'react-router-dom'
 
 const Wrapper = styled.div`
 		width:100%;
@@ -89,7 +90,7 @@ export class PostContainer extends Component {
 				{this.state.posts.map(post =>
 					<Wrapper>
 						<UserAvatarConstainer>
-							<UserAvatar src={post.userAvatar} alt='avatar' />
+							<Link to={post.UserName}><UserAvatar src={post.userAvatar} alt='avatar' /></Link>
 						</UserAvatarConstainer>
 						<TextConstainer>
 							<UserDataConstainer>

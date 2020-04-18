@@ -9,8 +9,7 @@ class EditUser extends Component {
 		defaultAvatar: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
 		Postsref: firebase.firestore().collection('posts'),
 		usersRef: firebase.firestore().collection('users'),
-		userAuth: firebase.auth().currentUser.displayName,
-		userUid: firebase.auth().currentUser.uid,
+		currentUser: firebase.auth().currentUser,
 		userAvatarEvent: '',
 		defaultAvatarEvent: '',
 		userNameEvent: '',
@@ -23,9 +22,19 @@ class EditUser extends Component {
 		if (!this.state.userName.length){
 			this.setState({ userNameEvent: 'Form is empty' })
 		} else {
-			this.state.usersRef.doc(this.state.userAuth).set({
+			this.state.usersRef.doc(this.state.currentUser.displayName).set({
 				userName: this.state.userName,},{ merge: true })
 			this.setState({userNameEvent: 'Nick changed!', userName: '' })
+			const { userName } = this.state;
+			this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
+				.get()
+				.then(function (querySnapshot) {
+					querySnapshot.forEach(function (doc) {
+						firebase.firestore().collection('posts').doc(doc.id).set({
+							UserName: userName,
+						}, { merge: true })
+					});
+				});
 		}
 	}
 
@@ -39,13 +48,13 @@ class EditUser extends Component {
 				userAvatarEvent: 'Upload success!',
 			}))
 			.then(() => {
-				this.state.usersRef.doc(this.state.userAuth).set({
+				this.state.usersRef.doc(this.state.currentUser.displayName).set({
 					avatar: this.state.photoURL,
 				}, { merge: true })
 			})
 			.then(() => {
 				const { photoURL } = this.state;
-				this.state.Postsref.where("UserUid", "==", this.state.userUid)
+				this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
 				.get()
 				.then(function (querySnapshot) {
 					querySnapshot.forEach(function (doc) {
@@ -59,12 +68,12 @@ class EditUser extends Component {
 
 	handleSetDefaultAvatar = () => {
 		const { defaultAvatar } = this.state;
-		this.state.usersRef.doc(this.state.userAuth).set({
+		this.state.usersRef.doc(this.state.currentUser.displayName).set({
 			avatar: defaultAvatar,}, { merge: true })
 			.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
 
 			.then(() => {
-				this.state.Postsref.where("UserUid", "==", this.state.userUid)
+				this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
 					.get()
 					.then(function (querySnapshot) {
 						querySnapshot.forEach(function (doc) {
@@ -125,26 +134,3 @@ class EditUser extends Component {
 	}
 }
 export default EditUser
-
-/*
-	this.state.Postsref.get().then(querySnapshot => {
-			querySnapshot.forEach( doc => {
-				console.log(doc.data().UserUid);
-				if (doc.data().UserUid === this.state.userUid) {
-					doc.data().where("UserUid", "==", this.state.userUid).set({
-						userAvatar: this.state.photoURL,
-					}, { merge: true })
-				}
-			});
-		});
-				.get()
-			.then(querySnapshot => {
-				querySnapshot.forEach(doc => {
-					console.log(doc.id, " => ", doc.data().userAvatar);
-					console.log(`this ${this.state.test}`);
-				})
-			})
-						this.state.Postsref.where("UserUid", "==", this.state.userUid).set({
-					avatar: this.state.photoURL,
-				}, { merge: true })
-*/

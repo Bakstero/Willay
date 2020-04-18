@@ -3,7 +3,6 @@ import firebase from '../components/Firebase/firebase'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { logout } from '../components/Logout/index'
 const Avatar = styled.img`
 	width: 300px;
 	height: 300px;
@@ -16,12 +15,12 @@ class UserPage extends Component {
 		this.state = {
 			user: {},
 			isEdit: false,
+			userAuth: firebase.auth().currentUser.displayName,
 		};
 	}
 
 	EditUserButton = () => {
-		const userAuth = firebase.auth().currentUser.displayName;
-		if (userAuth !== this.props.match.params.id) {
+		if (this.state.userAuth !== this.props.match.params.id) {
 			this.setState({
 				isEdit: false
 			})
@@ -41,12 +40,12 @@ class UserPage extends Component {
 					key: doc.id,
 				});
 			}
-			this.EditUserButton()
 		});
 	}
 
 	componentDidMount () {
 		this.GetUserData()
+		this.EditUserButton()
 	}
 
 	componentDidUpdate () {
@@ -72,7 +71,6 @@ class UserPage extends Component {
 						null //In the future, there will be a "add friend" / "remove friend" button
 					}
 				</div>
-				<button onClick={logout}>Logout</button>
 			</div>
 		)
 	}
