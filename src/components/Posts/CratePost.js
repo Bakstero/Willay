@@ -7,8 +7,8 @@ export class CratePost extends Component {
 		postsRef: firebase.firestore().collection('posts'),
 		usersRef: firebase.firestore().collection('users'),
 		userAuth: firebase.auth().currentUser.displayName,
-		data: Date.now().toString(),
-		dataText: new Date().toLocaleString(),
+		data: '',
+		dataText: '',
 		UserContent: '',
 		UserUid: '',
 		UserName: '',
@@ -16,6 +16,8 @@ export class CratePost extends Component {
 	}
 
 	componentDidMount() {
+		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
+		this.dataTextInterval = setInterval(() => this.setState({ dataText: new Date().toLocaleString("en-us") }), 1000)
 		const { userAuth } = this.state;
 		this.state.usersRef.doc(userAuth).get().then((doc) => {
 			if (doc.exists) {
@@ -26,6 +28,11 @@ export class CratePost extends Component {
 				})
 			}
 		})
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.DataInterval);
+		clearInterval(this.dataTextInterval);
 	}
 
 	handleSubmit = event => {

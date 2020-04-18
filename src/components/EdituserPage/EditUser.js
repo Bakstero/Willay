@@ -58,9 +58,22 @@ class EditUser extends Component {
 	}
 
 	handleSetDefaultAvatar = () => {
+		const { defaultAvatar } = this.state;
 		this.state.usersRef.doc(this.state.userAuth).set({
-			avatar: this.state.defaultAvatar,}, { merge: true })
+			avatar: defaultAvatar,}, { merge: true })
 			.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
+
+			.then(() => {
+				this.state.Postsref.where("UserUid", "==", this.state.userUid)
+					.get()
+					.then(function (querySnapshot) {
+						querySnapshot.forEach(function (doc) {
+							firebase.firestore().collection('posts').doc(doc.id).set({
+								userAvatar: defaultAvatar,
+							}, { merge: true })
+						});
+					});
+			})
 	}
 
 	handleChange = event => {
