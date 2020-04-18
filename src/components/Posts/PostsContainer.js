@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import firebase from '../Firebase/firebase'
 
 const Wrapper = styled.div`
-		width:80%;
+		width:100%;
 		height: 20vh;
 		border-radius: 10px;
 		display:flex;
@@ -81,6 +81,7 @@ export class PostContainer extends Component {
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
 	}
+
 	render() {
 		return (
 			<div>

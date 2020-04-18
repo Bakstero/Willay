@@ -3,7 +3,7 @@ import firebase from '../components/Firebase/firebase'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-
+import { logout } from '../components/Logout/index'
 const Avatar = styled.img`
 	width: 300px;
 	height: 300px;
@@ -72,6 +72,7 @@ class UserPage extends Component {
 						null //In the future, there will be a "add friend" / "remove friend" button
 					}
 				</div>
+				<button onClick={logout}>Logout</button>
 			</div>
 		)
 	}

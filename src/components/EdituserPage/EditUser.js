@@ -7,12 +7,15 @@ class EditUser extends Component {
 		userName: '',
 		photoURL: '',
 		defaultAvatar: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
+		Postsref: firebase.firestore().collection('posts'),
 		usersRef: firebase.firestore().collection('users'),
 		userAuth: firebase.auth().currentUser.displayName,
+		userUid: firebase.auth().currentUser.uid,
 		userAvatarEvent: '',
 		defaultAvatarEvent: '',
 		userNameEvent: '',
 		ProgressUpolad: 0,
+		test: '',
 	}
 
 	EditUserName = event => {
@@ -39,6 +42,18 @@ class EditUser extends Component {
 				this.state.usersRef.doc(this.state.userAuth).set({
 					avatar: this.state.photoURL,
 				}, { merge: true })
+			})
+			.then(() => {
+				const { photoURL } = this.state;
+				this.state.Postsref.where("UserUid", "==", this.state.userUid)
+				.get()
+				.then(function (querySnapshot) {
+					querySnapshot.forEach(function (doc) {
+						firebase.firestore().collection('posts').doc(doc.id).set({
+							userAvatar: photoURL,
+						}, { merge: true })
+					});
+				});
 			})
 	}
 
@@ -97,3 +112,26 @@ class EditUser extends Component {
 	}
 }
 export default EditUser
+
+/*
+	this.state.Postsref.get().then(querySnapshot => {
+			querySnapshot.forEach( doc => {
+				console.log(doc.data().UserUid);
+				if (doc.data().UserUid === this.state.userUid) {
+					doc.data().where("UserUid", "==", this.state.userUid).set({
+						userAvatar: this.state.photoURL,
+					}, { merge: true })
+				}
+			});
+		});
+				.get()
+			.then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					console.log(doc.id, " => ", doc.data().userAvatar);
+					console.log(`this ${this.state.test}`);
+				})
+			})
+						this.state.Postsref.where("UserUid", "==", this.state.userUid).set({
+					avatar: this.state.photoURL,
+				}, { merge: true })
+*/

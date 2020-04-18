@@ -61,7 +61,7 @@ class SignUpForm extends Component {
 				})
 				.then(() => {
 					this.saveUser(createdUser).then(() => {
-
+						console.log(createdUser)
 					})
 				})
 				.catch(err => {
