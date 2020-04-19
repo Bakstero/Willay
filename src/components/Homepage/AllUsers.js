@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import firebase from '../Firebase/firebase';
+import { firestore } from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 import { logout } from '../Logout/index'
@@ -60,7 +60,7 @@ const UserAvatar = styled.img`
 class AllUsers extends Component {
 	constructor(props) {
 		super(props);
-		this.ref = firebase.firestore().collection('users');
+		this.ref = firestore().collection('users');
 		this.unsubscribe = null;
 		this.state = {
 			users: []

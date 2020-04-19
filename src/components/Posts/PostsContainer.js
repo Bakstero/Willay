@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
-import firebase from '../Firebase/firebase'
+import { firestore} from '../Firebase/firebase'
 import {Link} from 'react-router-dom'
 
 const Wrapper = styled.div`
@@ -54,7 +54,7 @@ color: white;
 export class PostContainer extends Component {
 	constructor(props) {
 		super(props);
-		this.ref = firebase.firestore().collection('posts').orderBy("data", "desc");
+		this.ref = firestore().collection('posts').orderBy("data", "desc");
 		this.unsubscribe = null;
 		this.state = {
 			posts: []
@@ -64,7 +64,7 @@ export class PostContainer extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
-			const { content, data, userAvatar, UserName, dataText } = doc.data();
+			const { content, data, userAvatar, UserName, dataText, userLink } = doc.data();
 			posts.push({
 				key: doc.id,
 				content, // DocumentSnapshot
@@ -72,6 +72,7 @@ export class PostContainer extends Component {
 				userAvatar,
 				UserName,
 				dataText,
+				userLink,
 			});
 		});
 		this.setState({
@@ -90,7 +91,7 @@ export class PostContainer extends Component {
 				{this.state.posts.map(post =>
 					<Wrapper>
 						<UserAvatarConstainer>
-							<Link to={post.UserName}><UserAvatar src={post.userAvatar} alt='avatar' /></Link>
+							<Link to={`user/${post.userLink}`}><UserAvatar src={post.userAvatar} alt='avatar' /></Link>
 						</UserAvatarConstainer>
 						<TextConstainer>
 							<UserDataConstainer>

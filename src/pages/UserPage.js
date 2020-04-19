@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebase from '../components/Firebase/firebase'
+import { firebaseAuth, firestore }  from '../components/Firebase/firebase'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -15,12 +15,11 @@ class UserPage extends Component {
 		this.state = {
 			user: {},
 			isEdit: false,
-			userAuth: firebase.auth().currentUser.displayName,
 		};
 	}
 
 	EditUserButton = () => {
-		if (this.state.userAuth !== this.props.match.params.id) {
+		if (firebaseAuth().currentUser.displayName !== this.props.match.params.id) {
 			this.setState({
 				isEdit: false
 			})
@@ -32,8 +31,8 @@ class UserPage extends Component {
 	}
 
 	GetUserData = () => {
-		const ref = firebase.firestore().collection('users').doc(this.props.match.params.id);
-		ref.get().then((doc) => {
+		firestore().collection('users').doc(this.props.match.params.id)
+		.get().then((doc) => {
 			if (doc.exists) {
 				this.setState({
 					user: doc.data(),
@@ -55,18 +54,20 @@ class UserPage extends Component {
 	}
 
 	render() {
+		const { avatar, userEmail, userName, key } = this.state.user
+		const { isEdit } = this.state
 		return (
 			<div >
 				<Navbar />
 				<div>
-					<Avatar src={this.state.user.avatar} alt='User Avatar' />
-					<h1>{this.state.user.userEmail}</h1>
-					<h1>{this.state.user.userName}</h1>
+					<Avatar src={avatar} alt='User Avatar' />
+					<h1>{userEmail}</h1>
+					<h1>{userName}</h1>
 				</div>
 				<div>
-					{this.state.isEdit === true
+					{isEdit === true
 						?
-						<Link to={`/edit/user/${this.state.key}`}><button>Edit</button></Link>
+						<Link to={`/edit/user/${key}`}><button>Edit</button></Link>
 						:
 						null //In the future, there will be a "add friend" / "remove friend" button
 					}

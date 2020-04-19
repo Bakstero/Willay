@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebase from '../Firebase/firebase'
+import {firebaseAuth} from '../Firebase/firebase'
 
 export default class SignInForm extends Component {
 	state = {
@@ -24,13 +24,12 @@ export default class SignInForm extends Component {
 			return true
 		}
 	}
-x
+
 
 	handleSubmit = event => {
 		event.preventDefault()
 		if (this.isFormValid()) {
-		firebase
-			.auth()
+			firebaseAuth()
 			.signInWithEmailAndPassword(this.state.email, this.state.password)
 			.catch(err => {
 				console.log(err)
@@ -39,7 +38,7 @@ x
 					PssError: err.message,
 					error: true,
 				})
-				})
+			})
 		}
 	}
 
@@ -55,7 +54,12 @@ x
 				<form onSubmit={this.handleSubmit}>
 					<div >
 						<label>Email</label>
-						<input onChange={this.handleChange} placeholder="email" name="email" type="email" value={email} />
+						<input
+							onChange={this.handleChange}
+							placeholder="email"
+							name="email"
+							type="email"
+							value={email} />
 					</div>
 					<div>
 						<label>Password</label>

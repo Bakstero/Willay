@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebase from '../../Firebase/firebase'
+import { firestore, firebaseAuth } from '../../Firebase/firebase'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -23,9 +23,9 @@ class UserIcon extends Component {
 	}
 
 	GetUserIcon = () => {
-		const userAuth = firebase.auth().currentUser.displayName;
-		const ref = firebase.firestore().collection('users').doc(userAuth);
-		ref.get().then((doc) => {
+		const userAuth = firebaseAuth().currentUser.displayName;
+		firestore().collection('users').doc(userAuth)
+		.get().then((doc) => {
 			if (doc.exists) {
 				this.setState({
 					avatar: doc.data().avatar,
@@ -40,9 +40,10 @@ class UserIcon extends Component {
 	}
 
 	render() {
+		const { user, avatar} = this.state
 		return (
 			<div >
-				<Link to={`user/${this.state.user}`}><Avatar src={this.state.avatar} alt='User Avatar' /></Link>
+				<Link to={`user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
 			</div>
 		)
 	}

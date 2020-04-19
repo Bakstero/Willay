@@ -1,25 +1,24 @@
 import React, { Component } from 'react'
-import firebase from '../Firebase/firebase'
+import{ firestore, firebaseAuth } from '../Firebase/firebase'
 
 
 export class CratePost extends Component {
 	state = {
-		postsRef: firebase.firestore().collection('posts'),
-		usersRef: firebase.firestore().collection('users'),
-		userAuth: firebase.auth().currentUser.displayName,
+		userAuth: firebaseAuth().currentUser.displayName,
 		data: '',
 		dataText: '',
 		UserContent: '',
 		UserUid: '',
 		UserName: '',
 		userAvatar: '',
+		userLink:  firebaseAuth().currentUser.displayName,
 	}
 
 	componentDidMount() {
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
 		this.dataTextInterval = setInterval(() => this.setState({ dataText: new Date().toLocaleString("en-us") }), 1000)
 		const { userAuth } = this.state;
-		this.state.usersRef.doc(userAuth).get().then((doc) => {
+		firestore().collection('users').doc(userAuth).get().then((doc) => {
 			if (doc.exists) {
 				this.setState({
 					userAvatar: doc.data().avatar,
@@ -37,14 +36,15 @@ export class CratePost extends Component {
 
 	handleSubmit = event => {
 		event.preventDefault()
-		const { UserContent, data, UserName, UserUid, userAvatar, dataText,userAuth} = this.state;
-		this.state.postsRef.doc(`${data} ${userAuth}`).set({
+		const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth, userLink} = this.state;
+		firestore().collection('posts').doc(`${data} ${userAuth}`).set({
 			content: UserContent,
 			data: data,
 			userAvatar,
 			UserName,
 			UserUid,
 			dataText,
+			userLink,
 		})
 	}
 

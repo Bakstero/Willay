@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebase from '../Firebase/firebase'
+import { firestore, firebaseAuth} from '../Firebase/firebase'
 
 
 class SignUpForm extends Component {
@@ -9,7 +9,6 @@ class SignUpForm extends Component {
 		password: '',
 		passwordConfirmation: '',
 		photoURL: '',
-		usersRef: firebase.firestore().collection('users'),
 		errors: [],
 	}
 
@@ -50,8 +49,7 @@ class SignUpForm extends Component {
 		const { email, userName, password } = this.state;
 		event.preventDefault()
 		if(this.isFormValid()){
-		firebase
-			.auth()
+		firebaseAuth()
 			.createUserWithEmailAndPassword(email, password)
 			.then(createdUser => {
 				createdUser.user.updateProfile({
@@ -78,7 +76,7 @@ class SignUpForm extends Component {
 	};
 
 	saveUser = createdUser => {
-		return this.state.usersRef.doc(this.state.userName).set({
+		return firestore().collection('users').doc(this.state.userName).set({
 			userName: createdUser.user.displayName,
 			avatar: createdUser.user.photoURL,
 			userUid: createdUser.user.uid,

@@ -1,36 +1,33 @@
 import React, { Component } from 'react'
-import firebase from '../Firebase/firebase'
+import { firebaseAuth, firestore, firebaseStorage } from '../Firebase/firebase'
 import FileUploader from 'react-firebase-file-uploader'
 
 class EditUser extends Component {
 	state = {
+		defaultAvatar: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
+		currentUser: firebaseAuth().currentUser,
 		userName: '',
 		photoURL: '',
-		defaultAvatar: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
-		Postsref: firebase.firestore().collection('posts'),
-		usersRef: firebase.firestore().collection('users'),
-		currentUser: firebase.auth().currentUser,
 		userAvatarEvent: '',
 		defaultAvatarEvent: '',
 		userNameEvent: '',
 		ProgressUpolad: 0,
-		test: '',
 	}
 
 	EditUserName = event => {
+		const { userName, currentUser } = this.state;
 		event.preventDefault()
 		if (!this.state.userName.length){
 			this.setState({ userNameEvent: 'Form is empty' })
 		} else {
-			this.state.usersRef.doc(this.state.currentUser.displayName).set({
-				userName: this.state.userName,},{ merge: true })
+			firestore().collection('users').doc(currentUser.displayName).set({
+				userName: userName,},{ merge: true })
 			this.setState({userNameEvent: 'Nick changed!', userName: '' })
-			const { userName } = this.state;
-			this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
+			firestore().collection('posts').where("UserUid", "==", currentUser.uid)
 				.get()
-				.then(function (querySnapshot) {
+				.then(querySnapshot => {
 					querySnapshot.forEach(function (doc) {
-						firebase.firestore().collection('posts').doc(doc.id).set({
+						firestore().collection('posts').doc(doc.id).set({
 							UserName: userName,
 						}, { merge: true })
 					});
@@ -40,49 +37,60 @@ class EditUser extends Component {
 
 	handleProgress = progress => {this.setState({ProgressUpolad: progress})}
 
+
+	ChangeuserImage = () => {
+		const { photoURL, currentUser } = this.state;
+		firestore().collection('users').doc(currentUser.displayName).set({
+			avatar: photoURL }, { merge: true })
+	}
+
+	changePostsUserImage = () => {
+		const { photoURL, currentUser } = this.state;
+		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
+			.get()
+			.then(function (querySnapshot) {
+				querySnapshot.forEach(function (doc) {
+					firestore().collection('posts').doc(doc.id).set({
+						userAvatar: photoURL }, { merge: true })
+				});
+			});
+	}
+
+
 	handleUploadSuccess = filename => {
-		firebase.storage().ref('avatars').child(filename).getDownloadURL()
+		firebaseStorage().ref('avatars').child(filename).getDownloadURL()
 			.then(url => this.setState({
 				photoURL: url,
 				ProgressUpolad: 100,
 				userAvatarEvent: 'Upload success!',
 			}))
 			.then(() => {
-				this.state.usersRef.doc(this.state.currentUser.displayName).set({
-					avatar: this.state.photoURL,
-				}, { merge: true })
+				this.ChangeuserImage()
 			})
 			.then(() => {
-				const { photoURL } = this.state;
-				this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
-				.get()
-				.then(function (querySnapshot) {
-					querySnapshot.forEach(function (doc) {
-						firebase.firestore().collection('posts').doc(doc.id).set({
-							userAvatar: photoURL,
-						}, { merge: true })
-					});
-				});
+				this.changePostsUserImage()
 			})
 	}
 
-	handleSetDefaultAvatar = () => {
-		const { defaultAvatar } = this.state;
-		this.state.usersRef.doc(this.state.currentUser.displayName).set({
-			avatar: defaultAvatar,}, { merge: true })
-			.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
+	changePostsDefaultImage = () => {
+		const { defaultAvatar, currentUser } = this.state;
+		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
+			.get()
+			.then(function (querySnapshot) {
+				querySnapshot.forEach(function (doc) {
+					firestore().collection('posts').doc(doc.id).set({
+						userAvatar: defaultAvatar,
+					}, { merge: true })
+				});
+			});
+	}
 
-			.then(() => {
-				this.state.Postsref.where("UserUid", "==", this.state.currentUser.uid)
-					.get()
-					.then(function (querySnapshot) {
-						querySnapshot.forEach(function (doc) {
-							firebase.firestore().collection('posts').doc(doc.id).set({
-								userAvatar: defaultAvatar,
-							}, { merge: true })
-						});
-					});
-			})
+	handleSetDefaultAvatar = () => {
+		const { defaultAvatar, currentUser } = this.state;
+		firestore().collection('users').doc(currentUser.displayName).set({
+			avatar: defaultAvatar,}, { merge: true })
+				.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
+				.then(() => { this.changePostsDefaultImage() })
 	}
 
 	handleChange = event => {
@@ -107,14 +115,13 @@ class EditUser extends Component {
 					<button type="submit">Edit userName</button>
 					<div>{userNameEvent}</div>
 				</form>
-
 				<div>
 					<div >
 						<label>Avatar</label>
 							<FileUploader
 								accept='image/*'
 								name='image'
-								storageRef={firebase.storage().ref('avatars')}
+								storageRef={firebaseStorage().ref('avatars')}
 								onUploadSuccess={this.handleUploadSuccess}
 								onProgress={this.handleProgress}
 							/>
@@ -122,7 +129,6 @@ class EditUser extends Component {
 							<p>{ProgressUpolad}</p>
 							<p>{userAvatarEvent}</p>
 					</div>
-
 					<div>
 						<button onClick={this.handleSetDefaultAvatar}>Set default Avatar</button>
 						<p>{defaultAvatarEvent}</p>
