@@ -15,6 +15,7 @@ class UserPage extends Component {
 		this.state = {
 			user: {},
 			isEdit: false,
+			key: '',
 		};
 	}
 
@@ -54,8 +55,8 @@ class UserPage extends Component {
 	}
 
 	render() {
-		const { avatar, userEmail, userName, key } = this.state.user
-		const { isEdit } = this.state
+		const { avatar, userEmail, userName} = this.state.user
+		const { isEdit,key} = this.state
 		return (
 			<div >
 				<Navbar />
