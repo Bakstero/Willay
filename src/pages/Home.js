@@ -15,15 +15,18 @@ const NotContainer = styled.div`
 	height: 100vh;
 	display: flex;
 	justify-content:center;
-	@media screen and (max-width: 500px){
+	margin-left:100px;
+	@media screen and (max-width: 800px){
 		display: none;
+		margin-left:0px;
 	}
 `
 const MainBoard = styled.div`
 	width: 50%;
-
-	@media screen and (max-width: 500px){
+	margin-left:100px;
+	@media screen and (max-width: 800px){
 		width: 100%;
+		margin-left:0px;
 	}
 `
 
@@ -36,11 +39,7 @@ function Home() {
 			</NotContainer>
 			<MainBoard>
 				<PostsSection />
-				<CratePost />
 			</MainBoard>
-			<NotContainer>
-				<AllUsers />
-			</NotContainer>
 		</StyledHome>
 	)
 }

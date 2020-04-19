@@ -10,6 +10,16 @@ const Wrapper = styled.div`
 		display:flex;
 		background-color: #202020;
 		margin-top: 50px;
+		@media screen and (max-width: 1500px){
+		height: 10vh;
+	}
+		@media screen and (max-width: 1100px){
+		height: 8vh;
+	}
+	@media screen and (max-width: 800px){
+		height: 15vh;
+		border-radius: 0px;
+	}
 	`
 const UserAvatarConstainer = styled.div`
 		width:22%;
@@ -22,6 +32,8 @@ const TextConstainer = styled.div`
 		border-radius: 0px 10px 10px 0px;
 		display: flex;
 		flex-direction: column;
+		align-items: flex-end;
+
 	`
 const UserDataConstainer = styled.div`
 		width:100%;
@@ -36,20 +48,42 @@ const UserAvatar = styled.img`
 		height:100%;
 		display: flex;
 		border-radius: 10px 0px 0px 10px;
+		@media screen and (max-width: 800px){
+			border-radius: 0px;
+	}
 	`
 const UserName = styled.h2`
 	color: white;
+	@media screen and (max-width: 1500px){
+			font-size: 15px;
+	}
 	`
 const PostData = styled.h5`
 	color: white;
-
+@media screen and (max-width: 1500px){
+			font-size: 5px;
+	}
 	`
 const ContentContainer = styled.div`
-	width:100%;
+	background-color:#353535;
+	border-radius: 10px;
+	width:95%;
 	height:60%;
+	display:flex;
+	justify-content: space-between;
 `
 const InputContainer = styled.h5`
-color: white;
+	color: white;
+	width:95%;
+	font-size: 14px;
+	margin-left:15px;
+	@media screen and (max-width: 1500px){
+			font-size: 8px;
+	}
+		@media screen and (max-width: 850px){
+			font-size: 7px;
+	}
+
 `
 export class PostContainer extends Component {
 	constructor(props) {

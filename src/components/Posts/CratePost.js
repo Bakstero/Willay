@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
 import{ firestore, firebaseAuth } from '../Firebase/firebase'
+import styled from 'styled-components';
 
+
+const Wrapper = styled.div`
+margin-top: 100px;
+`
 
 export class CratePost extends Component {
 	state = {
 		userAuth: firebaseAuth().currentUser.displayName,
+		createPostModal: false,
 		data: '',
 		dataText: '',
 		UserContent: '',
 		UserUid: '',
 		UserName: '',
 		userAvatar: '',
-		userLink:  firebaseAuth().currentUser.displayName,
 	}
 
 	componentDidMount() {
@@ -34,9 +39,22 @@ export class CratePost extends Component {
 		clearInterval(this.dataTextInterval);
 	}
 
+	formIsEmpty = ({ UserContent}) => {
+		return !UserContent.length;
+	}
+
+	isFormValid = () => {
+		if (this.formIsEmpty(this.state)) {
+			return false
+		} else {
+			return true
+		}
+	}
+
 	handleSubmit = event => {
 		event.preventDefault()
-		const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth, userLink} = this.state;
+		if (this.isFormValid()) {
+		const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth} = this.state;
 		firestore().collection('posts').doc(`${data} ${userAuth}`).set({
 			content: UserContent,
 			data: data,
@@ -44,31 +62,48 @@ export class CratePost extends Component {
 			UserName,
 			UserUid,
 			dataText,
-			userLink,
+			userLink: userAuth
 		})
+			this.setState({ createPostModal: false, UserContent: ''})
+		}
 	}
+
+	handleCloseModalAddPost = () => {
+		this.setState({ createPostModal: false, UserContent: '' })
+	};
+	handleModalAddPost = () => {
+		this.setState({ createPostModal: true })
+	};
 
 	handleChange = event => {
 		this.setState({ [event.target.name]: event.target.value })
 	};
 
 	render() {
-		const { UserContent } = this.state;
+		const { UserContent, createPostModal } = this.state;
 		return (
-			<div>
-				<form onSubmit={this.handleSubmit}>
+			<Wrapper>
+				{createPostModal === false
+					?
+					<button onClick={this.handleModalAddPost} >Add Post</button>
+					:
 					<div>
-					<label>Crate Post</label>
-					<input
-						onChange={this.handleChange}
-						placeholder="What's up dude?"
-						name="UserContent"
-						type="text"
-						value={UserContent} />
+						<form onSubmit={this.handleSubmit}>
+							<div>
+								<label>Crate Post</label>
+								<input
+									onChange={this.handleChange}
+									placeholder="What's up dude?"
+									name="UserContent"
+									type="text"
+									value={UserContent} />
+							</div>
+							<button type="submit" >Create Post</button>
+						</form>
+						<button onClick={this.handleCloseModalAddPost}>Close</button>
 					</div>
-					<button type="submit">Add Post</button>
-				</form>
-			</div>
+				}
+			</Wrapper>
 		)
 	}
 }
