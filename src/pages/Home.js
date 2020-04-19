@@ -3,7 +3,6 @@ import AllUsers from '../components/Homepage/AllUsers'
 import Navbar from '../components/layout/Navbar/Navbar'
 import PostsSection from '../components/Posts/PostSection'
 import styled from 'styled-components';
-import CratePost from '../components/Posts/CratePost'
 
 const StyledHome = styled.div`
 	width: 100%;

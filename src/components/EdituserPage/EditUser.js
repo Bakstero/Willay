@@ -14,48 +14,53 @@ class EditUser extends Component {
 		ProgressUpolad: 0,
 	}
 
-	EditUserName = event => {
+
+	handleEditUserName = () => {
 		const { userName, currentUser } = this.state;
+		firestore().collection('users').doc(currentUser.displayName)
+			.set({ userName: userName }, { merge: true })
+		this.setState({ userNameEvent: 'Nick changed!', userName: '' })
+	}
+
+	editUserNamePosts = () => {
+		const { userName, currentUser } = this.state;
+		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
+		.get().then(querySnapshot => {
+			querySnapshot.forEach(function (doc) {
+				firestore().collection('posts').doc(doc.id)
+				.set({ UserName: userName }, { merge: true })
+			});
+		});
+	}
+
+	EditUserName = event => {
 		event.preventDefault()
 		if (!this.state.userName.length){
 			this.setState({ userNameEvent: 'Form is empty' })
 		} else {
-			firestore().collection('users').doc(currentUser.displayName).set({
-				userName: userName,},{ merge: true })
-			this.setState({userNameEvent: 'Nick changed!', userName: '' })
-			firestore().collection('posts').where("UserUid", "==", currentUser.uid)
-				.get()
-				.then(querySnapshot => {
-					querySnapshot.forEach(function (doc) {
-						firestore().collection('posts').doc(doc.id).set({
-							UserName: userName,
-						}, { merge: true })
-					});
-				});
+			this.handleEditUserName()
+			this.editUserNamePosts()
 		}
 	}
 
 	handleProgress = progress => {this.setState({ProgressUpolad: progress})}
 
-
-	ChangeuserImage = () => {
+	changeuserImage = () => {
 		const { photoURL, currentUser } = this.state;
-		firestore().collection('users').doc(currentUser.displayName).set({
-			avatar: photoURL }, { merge: true })
+		firestore().collection('users').doc(currentUser.displayName)
+		.set({avatar: photoURL }, { merge: true })
 	}
 
 	changePostsUserImage = () => {
 		const { photoURL, currentUser } = this.state;
 		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
-			.get()
-			.then(function (querySnapshot) {
-				querySnapshot.forEach(function (doc) {
-					firestore().collection('posts').doc(doc.id).set({
-						userAvatar: photoURL }, { merge: true })
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					firestore().collection('posts').doc(doc.id)
+					.set({userAvatar: photoURL }, { merge: true })
 				});
 			});
 	}
-
 
 	handleUploadSuccess = filename => {
 		firebaseStorage().ref('avatars').child(filename).getDownloadURL()
@@ -64,33 +69,27 @@ class EditUser extends Component {
 				ProgressUpolad: 100,
 				userAvatarEvent: 'Upload success!',
 			}))
-			.then(() => {
-				this.ChangeuserImage()
-			})
-			.then(() => {
-				this.changePostsUserImage()
-			})
+			.then(() => {this.changeuserImage()})
+			.then(() => {this.changePostsUserImage()})
 	}
 
 	changePostsDefaultImage = () => {
 		const { defaultAvatar, currentUser } = this.state;
 		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
-			.get()
-			.then(function (querySnapshot) {
-				querySnapshot.forEach(function (doc) {
-					firestore().collection('posts').doc(doc.id).set({
-						userAvatar: defaultAvatar,
-					}, { merge: true })
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					firestore().collection('posts').doc(doc.id)
+					.set({userAvatar: defaultAvatar}, { merge: true })
 				});
 			});
 	}
 
 	handleSetDefaultAvatar = () => {
 		const { defaultAvatar, currentUser } = this.state;
-		firestore().collection('users').doc(currentUser.displayName).set({
-			avatar: defaultAvatar,}, { merge: true })
-				.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
-				.then(() => { this.changePostsDefaultImage() })
+		firestore().collection('users').doc(currentUser.displayName)
+		.set({avatar: defaultAvatar}, { merge: true })
+		.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
+		.then(() => { this.changePostsDefaultImage() })
 	}
 
 	handleChange = event => {

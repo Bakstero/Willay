@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
-import { firestore} from '../Firebase/firebase'
-import {Link} from 'react-router-dom'
+import { firestore } from '../Firebase/firebase'
+import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
 		width:100%;
@@ -11,10 +11,10 @@ const Wrapper = styled.div`
 		background-color: #202020;
 		margin-top: 50px;
 		@media screen and (max-width: 1500px){
-		height: 10vh;
+		height: 15vh;
 	}
 		@media screen and (max-width: 1100px){
-		height: 8vh;
+		height: 12vh;
 	}
 	@media screen and (max-width: 800px){
 		height: 15vh;
@@ -91,7 +91,7 @@ export class PostContainer extends Component {
 		this.ref = firestore().collection('posts').orderBy("data", "desc");
 		this.unsubscribe = null;
 		this.state = {
-			posts: []
+			posts: [],
 		};
 	}
 
@@ -113,11 +113,10 @@ export class PostContainer extends Component {
 			posts
 		});
 	}
-
+//firestore().collection('posts').doc(`${post.data} ${post.userLink}`).delete()
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
 	}
-
 	render() {
 		return (
 			<div>
