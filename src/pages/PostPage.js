@@ -1,20 +1,24 @@
 import React, { Component } from 'react'
-import { firestore } from '../components/Firebase/firebase'
+import { firestore, firebaseAuth } from '../components/Firebase/firebase'
 
 class PostPage extends Component {
 	constructor(props) {
 		super(props);
 		this.ref = firestore().collection('posts').doc(this.props.match.params.id).collection('comments').orderBy("data", "desc");
 		this.firestore = firestore().collection('posts').doc(this.props.match.params.id)
+		this.auth = firebaseAuth().currentUser.uid
+		this.userNameAuth = firebaseAuth().currentUser
 		this.unsubscribe = null;
 		this.state = {
 			data: this.DataInterval,
+			dataText: this.dataTextInterval,
 			likes: null,
 			commentsInPost: null,
 			post: [],
 			comments: [],
 			key: '',
 			comment: '',
+			likeButton: true,
 		};
 	}
 
@@ -70,12 +74,16 @@ class PostPage extends Component {
 			.set({
 				content: this.state.comment,
 				data: this.state.data,
+				dataText: this.state.dataText,
+				userName: this.userNameAuth.displayName,
+				userLink: this.auth,
+				userAvatar: this.userNameAuth.photoURL,
 			}, { merge: true })
-			.then(() => { this.setState({ comment: '' }) })
+			.then(() => {this.setState({ comment: '' })})
 			.then(() => {this.AddCommentNumber()})
 	}
 
-	AddLikes =() => {
+	AddLikeNumber =() => {
 		this.firestore
 			.get().then((doc) => {
 				const { likes } = doc.data();
@@ -87,11 +95,31 @@ class PostPage extends Component {
 				}
 			})
 	}
+	AddLike = () => {
+		this.firestore.collection('likes').doc(this.auth)
+			.set({userUid: this.auth}, { merge: true })
+			.then(() => { this.setState({ comment: '', likeButton: false }) })
+			.then(() => { this.AddLikeNumber() })
+	}
+
+	likeAuth = () =>  {
+		this.firestore.collection('likes').doc(this.auth)
+			.get().then((doc) => {
+				if (doc.exists) {
+					this.setState({ likeButton: false})
+				} else {
+					this.setState({ likeButton: true})
+				}
+			})
+
+	}
 
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+		this.dataTextInterval = setInterval(() => this.setState({ dataText: new Date().toLocaleString("en-us") }), 1000)
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
 		this.GetPostData()
+		this.likeAuth();
 	}
 
 
@@ -116,7 +144,12 @@ class PostPage extends Component {
 					<button onClick={this.AddComment}>Add comment</button>
 				</div>
 				<div>
-					<button onClick={this.AddLikes}>Like</button>
+					{this.state.likeButton === true
+					?
+						<button type="submit" onClick={this.AddLike}>Like</button>
+					:
+					null
+					}
 				</div>
 				<div>
 					<h1>All comment</h1>

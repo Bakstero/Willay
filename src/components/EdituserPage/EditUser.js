@@ -14,11 +14,11 @@ class EditUser extends Component {
 		ProgressUpolad: 0,
 	}
 
-
 	handleEditUserName = () => {
 		const { userName, currentUser } = this.state;
 		firestore().collection('users').doc(currentUser.uid)
 			.set({ userName: userName }, { merge: true })
+			.then(() => {currentUser.updateProfile({displayName: userName})})
 		this.setState({ userNameEvent: 'Nick changed!', userName: '' })
 	}
 

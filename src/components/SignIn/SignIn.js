@@ -16,9 +16,9 @@ export default function SignInForm() {
 
 		return (
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<input name="email" type="email" ref={register({ required: true, })} />
+				<input name="email" type="email" placeholder="Email" ref={register({ required: true, })} />
 				{errors.email && 'Form is empty'}
-				<input name="password" type="password" ref={register({ required: true, })} />
+				<input name="password" type="password" placeholder="Password" ref={register({ required: true, })} />
 				{errors.password && 'Form is empty'}
 				<input type="submit" />
 				{error && 'Email or password is incorrect'}

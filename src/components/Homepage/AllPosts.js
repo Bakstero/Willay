@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 class AllPosts extends Component {
 	constructor(props) {
 		super(props);
-		this.ref = firestore().collection('posts').orderBy("data", "desc");
+		this.ref = firestore().collection('posts');
 		this.unsubscribe = null;
 		this.state = {
 			posts: [],
