@@ -11,7 +11,7 @@ import SignUp from '../SignUp'
 import SignIn from '../SignIn'
 import IndexPage from '../Index'
 import './App.css';
-
+import PostPage from '../PostPage';
 export class App extends Component {
   state = {
     authed: false,
@@ -43,9 +43,10 @@ export class App extends Component {
         <div>
           <Switch>
             <Route path={ROUTE.INDEX} exact component={IndexPage} />
-            <Route authed={this.state.authed} path={ROUTE.USER} component={UserPage} />
-            <PrivateRoute exact authed={this.state.authed} path={ROUTE.EDIT} component={EditUserPage} />
-            <PrivateRoute exact authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />
+            <PrivateRoute authed={this.state.authed} path={ROUTE.USER} component={UserPage}  />
+            <PrivateRoute authed={this.state.authed} path={ROUTE.POST} component={PostPage} />
+            <PrivateRoute authed={this.state.authed} path={ROUTE.EDIT} component={EditUserPage} />
+            <PrivateRoute authed={this.state.authed} path={ROUTE.HOME} component={HomePage} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_UP} component={SignUp} />
             <PublicRoute authed={this.state.authed} path={ROUTE.SIGN_IN} component={SignIn} />
             <Route render={() => <h1>404</h1>} />

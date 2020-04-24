@@ -9,7 +9,7 @@ margin-top: 100px;
 
 export class CratePost extends Component {
 	state = {
-		userAuth: firebaseAuth().currentUser.displayName,
+		userAuth: firebaseAuth().currentUser.uid,
 		createPostModal: false,
 		data: '',
 		dataText: '',
@@ -17,6 +17,8 @@ export class CratePost extends Component {
 		UserUid: '',
 		UserName: '',
 		userAvatar: '',
+		likes: 0,
+		commentsInPost: 0,
 	}
 
 	componentDidMount() {
@@ -54,15 +56,17 @@ export class CratePost extends Component {
 	handleSubmit = event => {
 		event.preventDefault()
 		if (this.isFormValid()) {
-		const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth} = this.state;
-		firestore().collection('posts').doc(`${data} ${userAuth}`).set({
+			const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth, likes, commentsInPost} = this.state;
+		firestore().collection('posts').doc(`${data}-${userAuth}`).set({
 			content: UserContent,
 			data: data,
 			userAvatar,
 			UserName,
 			UserUid,
 			dataText,
-			userLink: userAuth
+			userLink: userAuth,
+			likes,
+			commentsInPost,
 		})
 			this.setState({ createPostModal: false, UserContent: ''})
 		}

@@ -1,7 +1,8 @@
 import React from 'react'
 import AllUsers from '../components/Homepage/AllUsers'
+import AllPosts from '../components/Homepage/AllPosts'
 import Navbar from '../components/layout/Navbar/Navbar'
-import PostsSection from '../components/Posts/PostSection'
+import CreatePost from '../components/Posts/CratePost'
 import styled from 'styled-components';
 
 const StyledHome = styled.div`
@@ -37,7 +38,8 @@ function Home() {
 				<AllUsers />
 			</NotContainer>
 			<MainBoard>
-				<PostsSection />
+				<CreatePost />
+				<AllPosts />
 			</MainBoard>
 		</StyledHome>
 	)

@@ -1,87 +1,39 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { useForm  } from 'react-hook-form'
 import {firebaseAuth} from '../Firebase/firebase'
 
-export default class SignInForm extends Component {
-	state = {
-		email: '',
-		password: '',
-		PssError: '',
-		error: false,
-	}
+export default function SignInForm() {
+	const { register, errors, handleSubmit} = useForm()
+	const [error, setError] = useState()
 
-	formIsEmpty = ({email, password }) => {
-		return !email.length || !password.length;
-	}
-
-	isFormValid = () => {
-		if (this.formIsEmpty(this.state)) {
-			this.setState({
-				PssError: 'Fill all fields',
-				error: true,
-			 })
-			return false
-		} else {
-			return true
-		}
-	}
-
-
-	handleSubmit = event => {
-		event.preventDefault()
-		if (this.isFormValid()) {
-			firebaseAuth()
-			.signInWithEmailAndPassword(this.state.email, this.state.password)
+	const onSubmit = data => {
+		firebaseAuth()
+			.signInWithEmailAndPassword(data.email, data.password)
 			.catch(err => {
-				console.log(err)
-				console.log(err.message)
-				this.setState({
-					PssError: err.message,
-					error: true,
-				})
+				setError(error + err);
 			})
-		}
 	}
 
-	handleChange = event => {
-		this.setState({ [event.target.name]: event.target.value })
-	};
-
-	render() {
-		const { email, password, error, PssError } = this.state;
 		return (
-			<div >
-				<h1>Login</h1>
-				<form onSubmit={this.handleSubmit}>
-					<div >
-						<label>Email</label>
-						<input
-							onChange={this.handleChange}
-							placeholder="email"
-							name="email"
-							type="email"
-							value={email} />
-					</div>
-					<div>
-						<label>Password</label>
-						<input
-							onChange={this.handleChange}
-							name="password"
-							type="password"
-							placeholder="Password"
-							value={password} />
-					</div>
-					<button type="submit">Login</button>
-				</form>
-				<div>
-					{error === true
-						?
-						<div>
-							<h3>{PssError}</h3>
-						</div>
-						: null}
-				</div>
-			</div>
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<input name="email" type="email" ref={register({ required: true, })} />
+				{errors.email && 'Form is empty'}
+				<input name="password" type="password" ref={register({ required: true, })} />
+				{errors.password && 'Form is empty'}
+				<input type="submit" />
+				{error && 'Email or password is incorrect'}
+			</form>
 		)
-	}
-
 }
+/*
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<input name="Username" ref={register({ required: true, maxLength: 20 })} />
+				{errors.Username && 'Username is required'}
+				<input name="email" type="email" ref={register({ required: true, })} />
+				{errors.email && 'Email is required'}
+				<input name="age" type="number" ref={register({ min: 13, max: 99 })} />
+				<input name="password" type="password" ref={register} />
+				{errors.password && 'Email is required'}
+				<input type="submit" />
+			</form>
+*/

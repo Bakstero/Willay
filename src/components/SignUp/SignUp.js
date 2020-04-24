@@ -1,143 +1,53 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { useForm } from 'react-hook-form'
 import { firestore, firebaseAuth} from '../Firebase/firebase'
 
+function SignUpForm() {
+	const { register, errors, handleSubmit } = useForm()
 
-class SignUpForm extends Component {
-	state = {
-		userName: '',
-		email: '',
-		password: '',
-		passwordConfirmation: '',
-		photoURL: '',
-		errors: [],
-	}
-
-	formIsEmpty = ({ userName, email, password, passwordConfirmation }) => {
-		return !userName.length || !email.length || !password.length || !passwordConfirmation.length;
-	}
-
-	isPasswordValid = (password, passwordConfirmation) => {
-		if(password < 5 || passwordConfirmation < 5) {
-			return false
-		} else if ( password !== passwordConfirmation ) {
-			return false
-		} else {
-			return true
-		}
-	}
-
-	displayErrors = errors => errors.map((error, i) => <p key={i}>{error.message}</p>)
-
-	isFormValid = () => {
-		let errors = [];
-		let error;
-
-		if(this.formIsEmpty(this.state)) {
-			error = {message: 'Fill all fields'}
-			this.setState({ errors: errors.concat(error) })
-			return false
-		} else if (!this.isPasswordValid()) {
-			error = { message: 'Password is invalid' }
-			this.setState({ errors: errors.concat(error) })
-			return false
-		} else {
-			return true
-		}
-	}
-
-	handleSubmit = event => {
-		const { email, userName, password } = this.state;
-		event.preventDefault()
-		if(this.isFormValid()){
+	const onSubmit = data => {
+		const avatar = 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136'
 		firebaseAuth()
-			.createUserWithEmailAndPassword(email, password)
-			.then(createdUser => {
-				createdUser.user.updateProfile({
-					displayName: userName,
-					photoURL: 'https://firebasestorage.googleapis.com/v0/b/appwillay.appspot.com/o/avatars%2FDefaultUserAvatar.jpg?alt=media&token=aa410a73-9c7f-4d93-926c-37dae73dc136',
-					email: email,
-				})
-				.then(() => {
-					this.saveUser(createdUser).then(() => {
-						console.log(createdUser)
-					})
-				})
-				.catch(err => {
-					console.log(err)
-					console.log(err.message)
+			.createUserWithEmailAndPassword(data.email, data.password)
+			.then(() => {
+				firebaseAuth().currentUser.updateProfile({
+					displayName: data.firstName,
+					photoURL: avatar,
+					email: data.email,
 				})
 			})
-		}
-
+			.then(() => {
+				const user = firebaseAuth().currentUser
+				firestore().collection('users').doc(user.uid).set({
+					userName: data.firstName,
+					avatar: avatar,
+					userUid: user.uid	,
+					userEmail: data.email,
+					backgroundImage:'',
+					level: 1,
+					rageLevel: 0,
+					description: '',
+				})
+			})
 	}
 
-	handleChange = event => {
-		this.setState({ [event.target.name]: event.target.value })
-	};
-
-	saveUser = createdUser => {
-		return firestore().collection('users').doc(this.state.userName).set({
-			userName: createdUser.user.displayName,
-			avatar: createdUser.user.photoURL,
-			userUid: createdUser.user.uid,
-			userEmail: createdUser.user.email,
-		})
-	}
-
-	render() {
-		const { userName, email, password, passwordConfirmation, errors } = this.state;
 		return (
-			<div >
-				<h1>Register</h1>
-				<form onSubmit={this.handleSubmit}>
-					<div >
-						<label>username</label>
-						<input
-							onChange={this.handleChange}
-							placeholder="userName"
-							name="userName"
-							type="text"
-							value={userName} />
-					</div>
-					<div >
-						<label>Email</label>
-						<input
-							onChange={this.handleChange}
-							placeholder="email"
-							name="email"
-							type="email"
-							value={email} />
-					</div>
-					<div>
-						<label>Password</label>
-						<input
-							onChange={this.handleChange}
-							name="password"
-							type="password"
-							placeholder="Password"
-							value={password} />
-					</div>
-					<div>
-						<label>password Confirmation</label>
-						<input
-							onChange={this.handleChange}
-							type="password"
-							name="passwordConfirmation"
-							placeholder="password Confirm"
-							value={passwordConfirmation} />
-					</div>
-					<button type="submit">Register</button>
+			<div>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<input name="firstName" placeholder="Username" ref={register({ required: true, maxLength: 20 })} />
+					{errors.firstName?.type === "required" && 'firstName is required'}
+					{errors.firstName?.type === "maxLength" && 'Max lenght is 20'}
+
+					<input name="email" type="email" placeholder="Email" ref={register({ required: true, })} />
+					{errors.email && 'Email is required'}
+
+					<input name="password" type="password" placeholder="Password" ref={register({ required: true, minLength: 6})} />
+					{errors.password?.type === "required" && 'Password is required'}
+					{errors.password?.type === "minLength" && 'Password is too short'}
+
+					<input type="submit" />
 				</form>
-				<div>
-					{errors.length > 0 && (
-						<div >
-							<h3>Error</h3>
-							{this.displayErrors(errors)}
-						</div>
-					)}
-				</div>
 			</div>
 		)
-	}
 }
 export default SignUpForm

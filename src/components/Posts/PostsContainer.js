@@ -89,13 +89,14 @@ export class PostContainer extends Component {
 	constructor(props) {
 		super(props);
 		this.ref = firestore().collection('posts').orderBy("data", "desc");
+		this.deletePost = false;
 		this.unsubscribe = null;
 		this.state = {
 			posts: [],
 		};
 	}
 
-	onCollectionUpdate = (querySnapshot) => {
+	onCollectionUpdate = querySnapshot => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
 			const { content, data, userAvatar, UserName, dataText, userLink } = doc.data();
@@ -113,10 +114,14 @@ export class PostContainer extends Component {
 			posts
 		});
 	}
-//firestore().collection('posts').doc(`${post.data} ${post.userLink}`).delete()
+//
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
 	}
+	componentWillUnmount() {
+		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+	}
+
 	render() {
 		return (
 			<div>

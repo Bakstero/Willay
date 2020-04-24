@@ -17,7 +17,7 @@ class EditUser extends Component {
 
 	handleEditUserName = () => {
 		const { userName, currentUser } = this.state;
-		firestore().collection('users').doc(currentUser.displayName)
+		firestore().collection('users').doc(currentUser.uid)
 			.set({ userName: userName }, { merge: true })
 		this.setState({ userNameEvent: 'Nick changed!', userName: '' })
 	}
@@ -26,7 +26,7 @@ class EditUser extends Component {
 		const { userName, currentUser } = this.state;
 		firestore().collection('posts').where("UserUid", "==", currentUser.uid)
 		.get().then(querySnapshot => {
-			querySnapshot.forEach(function (doc) {
+			querySnapshot.forEach(doc => {
 				firestore().collection('posts').doc(doc.id)
 				.set({ UserName: userName }, { merge: true })
 			});
@@ -47,7 +47,7 @@ class EditUser extends Component {
 
 	changeuserImage = () => {
 		const { photoURL, currentUser } = this.state;
-		firestore().collection('users').doc(currentUser.displayName)
+		firestore().collection('users').doc(currentUser.uid)
 		.set({avatar: photoURL }, { merge: true })
 	}
 
@@ -86,7 +86,7 @@ class EditUser extends Component {
 
 	handleSetDefaultAvatar = () => {
 		const { defaultAvatar, currentUser } = this.state;
-		firestore().collection('users').doc(currentUser.displayName)
+		firestore().collection('users').doc(currentUser.uid)
 		.set({avatar: defaultAvatar}, { merge: true })
 		.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
 		.then(() => { this.changePostsDefaultImage() })

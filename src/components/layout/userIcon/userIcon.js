@@ -23,7 +23,7 @@ class UserIcon extends Component {
 	}
 
 	GetUserIcon = () => {
-		const userAuth = firebaseAuth().currentUser.displayName;
+		const userAuth = firebaseAuth().currentUser.uid;
 		firestore().collection('users').doc(userAuth)
 		.get().then((doc) => {
 			if (doc.exists) {
@@ -43,7 +43,7 @@ class UserIcon extends Component {
 		const { user, avatar} = this.state
 		return (
 			<div >
-				<Link to={`user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
+				<Link to={`/user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
 			</div>
 		)
 	}

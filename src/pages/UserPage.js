@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component} from 'react'
 import { firebaseAuth, firestore }  from '../components/Firebase/firebase'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
@@ -12,21 +12,26 @@ const Avatar = styled.img`
 class UserPage extends Component {
 	constructor(props) {
 		super(props);
+		this.ref = firestore().collection('posts').where("UserUid", "==", this.props.match.params.id)
+		this.unsubscribe = null;
 		this.state = {
 			user: {},
+			posts: [],
 			isEdit: false,
 			key: '',
+			data: this.DataInterval,
+			reload: false,
 		};
 	}
 
-	EditUserButton = () => {
-		if (firebaseAuth().currentUser.displayName !== this.props.match.params.id) {
+	userPrivilege = () => {
+		if (firebaseAuth().currentUser.uid === this.props.match.params.id) {
 			this.setState({
-				isEdit: false
+				isEdit: true,
 			})
 		} else {
 			this.setState({
-				isEdit: true
+				isEdit: false,
 			})
 		}
 	}
@@ -43,20 +48,37 @@ class UserPage extends Component {
 		});
 	}
 
-	componentDidMount () {
-		this.GetUserData()
-		this.EditUserButton()
+	onCollectionUpdate = (querySnapshot) => {
+		const posts = [];
+		querySnapshot.forEach((doc) => {
+			const { userAvatar, content, UserName, data, UserUid } = doc.data();
+			posts.push({
+				key: doc.id,
+				doc, // DocumentSnapshot
+				userAvatar,
+				content,
+				UserName,
+				data,
+				UserUid,
+			});
+		});
+		this.setState({
+			posts
+		});
 	}
 
-	componentDidUpdate () {
-		if (this.props.match.params.id !== this.state.user.userName) {
-			this.GetUserData()
-		}
+
+	componentDidMount () {
+		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+		this.GetUserData()
+		this.userPrivilege()
 	}
+
 
 	render() {
-		const { avatar, userEmail, userName} = this.state.user
-		const { isEdit,key} = this.state
+		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user
+		const { isEdit, key} = this.state
+
 		return (
 			<div >
 				<Navbar />
@@ -64,14 +86,31 @@ class UserPage extends Component {
 					<Avatar src={avatar} alt='User Avatar' />
 					<h1>{userEmail}</h1>
 					<h1>{userName}</h1>
+					<h1>{`Birth ${userBirth}`}</h1>
+					<h1>{`Lvl ${level}`}</h1>
+					<h1>{`Rage ${rageLevel}`}</h1>
+					<h1>{country}-{region}</h1>
+					<h1>{description}</h1>
 				</div>
 				<div>
 					{isEdit === true
 						?
-						<Link to={`/edit/user/${key}`}><button>Edit</button></Link>
+						<div>
+							<Link to={`/edit/user/${key}`}><button>Edit</button></Link>
+						</div>
 						:
 						null //In the future, there will be a "add friend" / "remove friend" button
 					}
+				</div>
+				<div>
+					{this.state.posts.map(post =>
+						<Link to={`/post/${post.data}-${post.UserUid}`}>
+							<div>
+								<h1>{post.UserName}</h1>
+								<h1>{post.content}</h1>
+							</div>
+						</Link>
+					)}
 				</div>
 			</div>
 		)

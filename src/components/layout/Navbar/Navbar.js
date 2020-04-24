@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
-import UserIcon from '../userIcon/userIcon'
 import {Link} from 'react-router-dom'
 import HamburgerMenu from './HamburgerMenu'
+import UserIcon from '../userIcon/userIcon'
 import { ReactComponent as Logo } from '../../Static/Icons/logo/Logo.svg'
 import { ReactComponent as Blog } from '../../Static/Icons/LeftSection/blog.svg'
 import { ReactComponent as Developer } from '../../Static/Icons/LeftSection/developer.svg'
