@@ -51,7 +51,7 @@ class UserPage extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, UserUid, userBirthy } = doc.data();
+			const { userAvatar, content, UserName, data, UserUid, userBirth } = doc.data();
 			posts.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -74,7 +74,6 @@ class UserPage extends Component {
 		this.GetUserData()
 		this.userPrivilege()
 	}
-
 
 	render() {
 		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user

@@ -14,11 +14,11 @@ class PostPage extends Component {
 			dataText: this.dataTextInterval,
 			likes: null,
 			commentsInPost: null,
+			likeButton: true,
 			post: [],
 			comments: [],
 			key: '',
 			comment: '',
-			likeButton: true,
 		};
 	}
 
@@ -61,9 +61,7 @@ class PostPage extends Component {
 				const { commentsInPost } = doc.data();
 				if (doc.exists) {
 					this.firestore
-						.set({
-							commentsInPost: commentsInPost + 1
-						}, { merge: true })
+						.set({commentsInPost: commentsInPost + 1}, { merge: true })
 				}
 			})
 	}
@@ -88,27 +86,39 @@ class PostPage extends Component {
 			.get().then((doc) => {
 				const { likes } = doc.data();
 				if (doc.exists) {
-					this.firestore
-						.set({
-							likes: likes + 1
-						},{ merge: true })
+					this.firestore.set({likes: likes + 1},{ merge: true })
 				}
 			})
 	}
-	AddLike = () => {
+	addLike = () => {
 		this.firestore.collection('likes').doc(this.auth)
 			.set({userUid: this.auth}, { merge: true })
 			.then(() => { this.setState({ comment: '', likeButton: false }) })
 			.then(() => { this.AddLikeNumber() })
 	}
 
-	likeAuth = () =>  {
+	disLikeNumber = () => {
+		this.firestore
+			.get().then((doc) => {
+				const { likes } = doc.data();
+				if (doc.exists) {
+					this.firestore.set({likes: likes - 1}, { merge: true })
+				}
+			})
+	}
+	disLike = () => {
+		this.firestore.collection('likes').doc(this.auth).delete()
+			.then(() => { this.setState({ comment: '', likeButton: true }) })
+			.then(() => { this.disLikeNumber() })
+	}
+
+	likeAuth = () => {
 		this.firestore.collection('likes').doc(this.auth)
 			.get().then((doc) => {
 				if (doc.exists) {
-					this.setState({ likeButton: false})
+					this.setState({ likeButton: false })
 				} else {
-					this.setState({ likeButton: true})
+					this.setState({ likeButton: true })
 				}
 			})
 
@@ -120,8 +130,8 @@ class PostPage extends Component {
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
 		this.GetPostData()
 		this.likeAuth();
-	}
 
+	}
 
 	render() {
 		const { userAvatar, UserName, dataText, content, likes } = this.state.post
@@ -146,9 +156,9 @@ class PostPage extends Component {
 				<div>
 					{this.state.likeButton === true
 					?
-						<button type="submit" onClick={this.AddLike}>Like</button>
+						<button onClick={this.addLike}>Like</button>
 					:
-					null
+						<button onClick={this.disLike}>UnLike</button>
 					}
 				</div>
 				<div>
