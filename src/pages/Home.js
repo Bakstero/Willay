@@ -11,7 +11,7 @@ const StyledHome = styled.div`
 	display: flex;
 `
 const NotContainer = styled.div`
-	width: 25%;
+	width: 20%;
 	height: 100vh;
 	display: flex;
 	justify-content:center;
@@ -22,7 +22,7 @@ const NotContainer = styled.div`
 	}
 `
 const MainBoard = styled.div`
-	width: 50%;
+	width: 40%;
 	margin-left:100px;
 	@media screen and (max-width: 800px){
 		width: 100%;

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { firestore} from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from './styledAllPosts.js'
 class AllPosts extends Component {
 	constructor(props) {
 		super(props);
-		this.ref = firestore().collection('posts');
+		this.ref = firestore().collection('posts').orderBy("data", "desc");
 		this.unsubscribe = null;
 		this.state = {
 			posts: [],
@@ -16,7 +16,7 @@ class AllPosts extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, UserUid, likes, commentsInPost, } = doc.data();
+			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
 			posts.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -27,6 +27,8 @@ class AllPosts extends Component {
 				UserUid,
 				likes,
 				commentsInPost,
+				dataText,
+				userLink,
 			});
 		});
 		this.setState({
@@ -45,14 +47,27 @@ class AllPosts extends Component {
 		return (
 			<div>
 				{this.state.posts.map(post =>
-					<Link to={`/post/${post.data}-${post.UserUid}`}>
+					<Wrapper>
+					< StyledPostInfo>
 							<div>
-								<h1>{post.UserName}</h1>
-							<h1>{post.content}</h1>
-							<h5>{`likes ${post.likes}`}</h5>
-							<h5>{`Comments ${post.commentsInPost}`}</h5>
+								<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
 							</div>
-						</Link>
+							<StyledInfoContainer>
+								<StyledUserName>{post.UserName}</StyledUserName>
+								<StyledData>{post.dataText}</StyledData>
+							</StyledInfoContainer>
+							<StyledInfoContainer button>
+								<Link to={`/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
+							</StyledInfoContainer>
+					</ StyledPostInfo>
+					<div>
+						<Styledcontent>{post.content}</Styledcontent>
+					</div>
+					<StyledStatContainer>
+						<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
+						<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
+					</StyledStatContainer>
+					</Wrapper>
 				)}
 			</div>
 		);

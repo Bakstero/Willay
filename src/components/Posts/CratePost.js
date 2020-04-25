@@ -1,14 +1,34 @@
-import React, { Component } from 'react'
+import React from 'react'
 import{ firestore, firebaseAuth } from '../Firebase/firebase'
 import styled from 'styled-components';
+import ReactModal from 'react-modal';
 
-
-const Wrapper = styled.div`
+const WrapperContainter = styled.div`
 margin-top: 100px;
 `
+const Button = styled.button`
+width: 110px;
+height: 45px;
+color: white;
+background: none;
+border: solid 1px #FFC045;
+border-radius: 10px;
+`
+const Hehe = styled(ReactModal)`
+	background-color: rgba(0,0,0,.9);
+	height:100%;
+	outline: none;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+`
 
-export class CratePost extends Component {
-	state = {
+export class CratePost extends React.Component {
+	constructor() {
+		super();
+		this.handleOpenModal = this.handleOpenModal.bind(this);
+		this.handleCloseModal = this.handleCloseModal.bind(this);
+		this.state = {
 		userAuth: firebaseAuth().currentUser.uid,
 		createPostModal: false,
 		data: '',
@@ -19,7 +39,9 @@ export class CratePost extends Component {
 		userAvatar: '',
 		likes: 0,
 		commentsInPost: 0,
+		showModal: false
 	}
+}
 
 	componentDidMount() {
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
@@ -72,43 +94,43 @@ export class CratePost extends Component {
 		}
 	}
 
-	handleCloseModalAddPost = () => {
-		this.setState({ createPostModal: false, UserContent: '' })
-	};
-	handleModalAddPost = () => {
-		this.setState({ createPostModal: true })
-	};
+	handleOpenModal() {
+		this.setState({ showModal: true });
+	}
+
+	handleCloseModal() {
+		this.setState({ showModal: false, UserContent: '' });
+	}
 
 	handleChange = event => {
 		this.setState({ [event.target.name]: event.target.value })
 	};
 
 	render() {
-		const { UserContent, createPostModal } = this.state;
+		const { UserContent } = this.state;
 		return (
-			<Wrapper>
-				{createPostModal === false
-					?
-					<button onClick={this.handleModalAddPost} >Add Post</button>
-					:
+			<WrapperContainter>
+				<Button onClick={this.handleOpenModal} >Add Post</Button>
+				<Hehe isOpen={this.state.showModal}>
 					<div>
 						<form onSubmit={this.handleSubmit}>
 							<div>
 								<label>Crate Post</label>
-								<input
+								<textarea
 									onChange={this.handleChange}
-									placeholder="What's up dude?"
+									placeholder="Write something.."
 									name="UserContent"
 									type="text"
-									value={UserContent} />
+									value={UserContent}></textarea>
 							</div>
-							<button type="submit" >Create Post</button>
+							<button type="submit">Create Post</button>
 						</form>
-						<button onClick={this.handleCloseModalAddPost}>Close</button>
+						<button onClick={this.handleCloseModal}>Close</button>
 					</div>
-				}
-			</Wrapper>
+				</Hehe>
+			</WrapperContainter>
 		)
 	}
 }
+
 export default CratePost

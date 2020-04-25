@@ -1,5 +1,6 @@
 import React, { Component} from 'react'
 import { firebaseAuth, firestore }  from '../components/Firebase/firebase'
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from '../components/Homepage/styledAllPosts'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -51,7 +52,7 @@ class UserPage extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, UserUid, userBirth } = doc.data();
+			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
 			posts.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -60,7 +61,10 @@ class UserPage extends Component {
 				UserName,
 				data,
 				UserUid,
-				userBirth,
+				likes,
+				commentsInPost,
+				dataText,
+				userLink,
 			});
 		});
 		this.setState({
@@ -78,7 +82,6 @@ class UserPage extends Component {
 	render() {
 		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user
 		const { isEdit, key} = this.state
-
 		return (
 			<div >
 				<Navbar />
@@ -104,12 +107,27 @@ class UserPage extends Component {
 				</div>
 				<div>
 					{this.state.posts.map(post =>
-						<Link to={`/post/${post.data}-${post.UserUid}`}>
+						<Wrapper>
+							< StyledPostInfo>
+								<div>
+									<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
+								</div>
+								<StyledInfoContainer>
+									<StyledUserName>{post.UserName}</StyledUserName>
+									<StyledData>{post.dataText}</StyledData>
+								</StyledInfoContainer>
+								<StyledInfoContainer button>
+									<Link to={`/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
+								</StyledInfoContainer>
+							</ StyledPostInfo>
 							<div>
-								<h1>{post.UserName}</h1>
-								<h1>{post.content}</h1>
+								<Styledcontent>{post.content}</Styledcontent>
 							</div>
-						</Link>
+							<StyledStatContainer>
+								<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
+								<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
+							</StyledStatContainer>
+						</Wrapper>
 					)}
 				</div>
 			</div>
