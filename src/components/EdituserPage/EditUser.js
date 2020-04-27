@@ -49,6 +49,7 @@ class EditUser extends Component {
 		const { photoURL, currentUser } = this.state;
 		firestore().collection('users').doc(currentUser.uid)
 		.set({avatar: photoURL }, { merge: true })
+			.then(() => { currentUser.updateProfile({ photoURL: photoURL })})
 	}
 
 	changePostsUserImage = () => {
@@ -89,6 +90,7 @@ class EditUser extends Component {
 		firestore().collection('users').doc(currentUser.uid)
 		.set({avatar: defaultAvatar}, { merge: true })
 		.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
+			.then(() => { currentUser.updateProfile({ photoURL: defaultAvatar }) })
 		.then(() => { this.changePostsDefaultImage() })
 	}
 

@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
 import { firebaseAuth, firestore }  from '../components/Firebase/firebase'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from '../components/Homepage/styledAllPosts'
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from '../components/styles/styledAllPosts'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'

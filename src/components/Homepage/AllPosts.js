@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { firestore} from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from './styledAllPosts.js'
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink } from '../styles/styledAllPosts.js'
 class AllPosts extends Component {
 	constructor(props) {
 		super(props);
@@ -48,7 +48,8 @@ class AllPosts extends Component {
 			<div>
 				{this.state.posts.map(post =>
 					<Wrapper>
-					< StyledPostInfo>
+						<StyledLink to={`/home/post/${post.data}-${post.UserUid}`}>
+					<StyledPostInfo>
 							<div>
 								<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
 							</div>
@@ -57,7 +58,6 @@ class AllPosts extends Component {
 								<StyledData>{post.dataText}</StyledData>
 							</StyledInfoContainer>
 							<StyledInfoContainer button>
-								<Link to={`/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
 							</StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
@@ -67,6 +67,7 @@ class AllPosts extends Component {
 						<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
 						<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
 					</StyledStatContainer>
+						</StyledLink>
 					</Wrapper>
 				)}
 			</div>

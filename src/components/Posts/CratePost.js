@@ -14,7 +14,7 @@ background: none;
 border: solid 1px #FFC045;
 border-radius: 10px;
 `
-const Hehe = styled(ReactModal)`
+const Modal = styled(ReactModal)`
 	background-color: rgba(0,0,0,.9);
 	height:100%;
 	outline: none;
@@ -111,7 +111,7 @@ export class CratePost extends React.Component {
 		return (
 			<WrapperContainter>
 				<Button onClick={this.handleOpenModal} >Add Post</Button>
-				<Hehe isOpen={this.state.showModal}>
+				<Modal isOpen={this.state.showModal}>
 					<div>
 						<form onSubmit={this.handleSubmit}>
 							<div>
@@ -127,7 +127,7 @@ export class CratePost extends React.Component {
 						</form>
 						<button onClick={this.handleCloseModal}>Close</button>
 					</div>
-				</Hehe>
+				</Modal>
 			</WrapperContainter>
 		)
 	}

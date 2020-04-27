@@ -1,13 +1,15 @@
 import styled, { css } from 'styled-components';
+import {Link} from 'react-router-dom'
 
-
+export const StyledLink = styled(Link)`
+text-decoration:none;
+`
 export const Wrapper = styled.div`
 	margin-top: 25px;
 	width: 100%;
 	background-color:#202020;
 	border-radius: 15px;
 	padding: 12px
-}
 `
 export const StyledPostInfo = styled.div`
 	width: 100%;

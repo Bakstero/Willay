@@ -1,5 +1,26 @@
 import React, { Component } from 'react'
 import { firestore, firebaseAuth } from '../components/Firebase/firebase'
+import {Link} from 'react-router-dom'
+import { Wrapper,
+	BackDiv,
+	Postdiv,
+	AvatarImg,
+	StyledPostInfo,
+	StyledInfoContainer,
+	StyledUserName,
+	StyledData,
+	Styledcontent,
+	StyledStatContainer,
+	StyledCommentContainer,
+	AvatarContainer,
+	ButtonsCommentContainer,
+	CommentContainer,
+	CommantInput,
+	CommentsContainter,
+	StyledSpan ,
+	StyledCommentsInfo,
+	Button } from '../components/styles/styledPostPage'
+
 
 class PostPage extends Component {
 	constructor(props) {
@@ -25,11 +46,15 @@ class PostPage extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const comments = [];
 		querySnapshot.forEach((doc) => {
-			const { content } = doc.data();
+			const { content, userName, dataText, userAvatar,userLink } = doc.data();
 			comments.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
 				content,
+				userName,
+				dataText,
+				userAvatar,
+				userLink,
 			});
 		});
 		this.setState({
@@ -134,47 +159,78 @@ class PostPage extends Component {
 	}
 
 	render() {
-		const { userAvatar, UserName, dataText, content, likes } = this.state.post
+		const { userAvatar, UserName, data, commentsInPost, UserUid, dataText, content, likes, userLink } = this.state.post
 		return (
-			<div >
-				<div>
-					<img src={userAvatar} alt='User Avatar' />
-					<h1>{UserName}</h1>
-					<h1>{dataText}</h1>
-					<h1>{content}</h1>
-					<h1>{likes}</h1>
-				</div>
-				<div>
-					<input
-							onChange={this.handleChange}
-							name="comment"
-							type="text"
-							value={this.state.comment}
-					/>
-					<button onClick={this.AddComment}>Add comment</button>
-				</div>
-				<div>
-					{this.state.likeButton === true
-					?
-						<button onClick={this.addLike}>Like</button>
-					:
-						<button onClick={this.disLike}>UnLike</button>
-					}
-				</div>
-				<div>
-					<h1>All comment</h1>
-					{this.state.comments.map(comment =>
-						<h1>{comment.content}</h1>
-					)}
-				</div>
-				<button onClick={this.props.history.goBack}>Back</button>
-			</div>
+			< Wrapper >
+				<BackDiv onClick={this.props.history.goBack}></BackDiv>
+				<Postdiv>
+					< StyledPostInfo>
+						<div>
+							<Link to={`/user/${userLink}`}><AvatarImg src={userAvatar} /></Link>
+						</div>
+						<StyledInfoContainer>
+							<StyledUserName>{UserName}</StyledUserName>
+							<StyledData>{dataText}</StyledData>
+						</StyledInfoContainer>
+					</ StyledPostInfo>
+					<div>
+						<Styledcontent>{content}</Styledcontent>
+					</div>
+					<StyledStatContainer>
+						<Styledcontent >
+							{this.state.likeButton === true
+								?
+								<Button like onClick={this.addLike}>Like</Button>
+								:
+								<Button unlike onClick={this.disLike}>UnLike</Button>
+							}
+						</Styledcontent>
+						<Styledcontent comment>{`likes ${likes}`}</Styledcontent>
+						<Styledcontent comment>{`Comments ${commentsInPost}`}</Styledcontent>
+					</StyledStatContainer>
+					<StyledCommentContainer>
+						<AvatarContainer>
+							<Link to={`/user/${this.auth}`}>	<AvatarImg comment src={this.userNameAuth.photoURL} /></Link>
+						</AvatarContainer>
+						<CommentContainer>
+							<CommantInput maxlength="700"
+								onChange={this.handleChange}
+								name="comment"
+								type="text"
+								placeholder="Write a comment..."
+								maxRows={9}
+								value={this.state.comment}
+							/>
+							<ButtonsCommentContainer>
+								<Button>Image</Button>
+								<Button onClick={this.AddComment}>Post</Button>
+							</ButtonsCommentContainer>
+						</CommentContainer>
+					</StyledCommentContainer>
+					<CommentsContainter>
+						<StyledSpan commentTag >All comment</StyledSpan >
+						{this.state.comments.map(comment =>
+							<div>
+								<StyledCommentsInfo>
+									<div>
+										<Link to={`/user/${comment.userLink}`}><AvatarImg Usercomment src={comment.userAvatar} /></Link>
+									</div>
+									<StyledInfoContainer>
+										<StyledUserName comment >{comment.userName}</StyledUserName>
+										<StyledData>{comment.dataText}</StyledData>
+									</StyledInfoContainer>
+								</ StyledCommentsInfo>
+								<div>
+									<Styledcontent>{comment.content}</Styledcontent>
+								</div>
+
+							</div>
+						)}
+					</CommentsContainter>
+				</Postdiv>
+				<BackDiv onClick={this.props.history.goBack}></BackDiv>
+			</ Wrapper>
 		)
 	}
 }
 export default PostPage
-
-/*
-		this.unsubscribe = null;
-		this.ref = firestore().collection('posts').doc(this.props.match.params.id).collection('commnets').orderBy("data", "desc")
-*/
