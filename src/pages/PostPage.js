@@ -46,7 +46,7 @@ class PostPage extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const comments = [];
 		querySnapshot.forEach((doc) => {
-			const { content, userName, dataText, userAvatar,userLink } = doc.data();
+			const { content, userName, dataText, userAvatar, userLink, postImage } = doc.data();
 			comments.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -55,6 +55,7 @@ class PostPage extends Component {
 				dataText,
 				userAvatar,
 				userLink,
+				postImage,
 			});
 		});
 		this.setState({
@@ -159,7 +160,7 @@ class PostPage extends Component {
 	}
 
 	render() {
-		const { userAvatar, UserName, data, commentsInPost, UserUid, dataText, content, likes, userLink } = this.state.post
+		const { userAvatar, UserName, commentsInPost, dataText, content, likes, userLink, postImage } = this.state.post
 		return (
 			< Wrapper >
 				<BackDiv onClick={this.props.history.goBack}></BackDiv>
@@ -170,10 +171,11 @@ class PostPage extends Component {
 						</div>
 						<StyledInfoContainer>
 							<StyledUserName>{UserName}</StyledUserName>
-							<StyledData>{dataText}</StyledData>
+							<StyledData relative date={dataText} />
 						</StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
+						<img src={postImage} />
 						<Styledcontent>{content}</Styledcontent>
 					</div>
 					<StyledStatContainer>
@@ -217,7 +219,7 @@ class PostPage extends Component {
 									</div>
 									<StyledInfoContainer>
 										<StyledUserName comment >{comment.userName}</StyledUserName>
-										<StyledData>{comment.dataText}</StyledData>
+										<StyledData relative date={comment.dataText} />
 									</StyledInfoContainer>
 								</ StyledCommentsInfo>
 								<div>

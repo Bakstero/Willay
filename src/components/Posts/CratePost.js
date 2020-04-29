@@ -2,6 +2,8 @@ import React from 'react'
 import{ firestore, firebaseAuth } from '../Firebase/firebase'
 import styled from 'styled-components';
 import ReactModal from 'react-modal';
+import FileUploader from 'react-firebase-file-uploader'
+import {firebaseStorage} from '../Firebase/firebase'
 
 const WrapperContainter = styled.div`
 margin-top: 100px;
@@ -31,15 +33,18 @@ export class CratePost extends React.Component {
 		this.state = {
 		userAuth: firebaseAuth().currentUser.uid,
 		createPostModal: false,
+		showModal: false,
 		data: '',
 		dataText: '',
 		UserContent: '',
 		UserUid: '',
 		UserName: '',
 		userAvatar: '',
+		postImage: '',
+		userAvatarEvent: '',
 		likes: 0,
 		commentsInPost: 0,
-		showModal: false
+		ProgressUpolad: 0,
 	}
 }
 
@@ -75,10 +80,19 @@ export class CratePost extends React.Component {
 		}
 	}
 
+	handleUploadSuccess = filename => {
+		firebaseStorage().ref('postsImages').child(filename).getDownloadURL()
+			.then(url => this.setState({
+				postImage: url,
+				ProgressUpolad: 100,
+				userAvatarEvent: 'Upload success!',
+			}))
+	}
+
 	handleSubmit = event => {
 		event.preventDefault()
 		if (this.isFormValid()) {
-			const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth, likes, commentsInPost} = this.state;
+			const { UserContent, data, UserName, UserUid, userAvatar, dataText, userAuth, likes, commentsInPost, postImage} = this.state;
 		firestore().collection('posts').doc(`${data}-${userAuth}`).set({
 			content: UserContent,
 			data: data,
@@ -89,11 +103,12 @@ export class CratePost extends React.Component {
 			userLink: userAuth,
 			likes,
 			commentsInPost,
+			postImage,
 		})
 			this.setState({ createPostModal: false, UserContent: ''})
 		}
 	}
-
+	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
 	handleOpenModal() {
 		this.setState({ showModal: true });
 	}
@@ -123,6 +138,13 @@ export class CratePost extends React.Component {
 									type="text"
 									value={UserContent}></textarea>
 							</div>
+							<FileUploader
+								accept='image/*'
+								name='image'
+								storageRef={firebaseStorage().ref('postsImages')}
+								onUploadSuccess={this.handleUploadSuccess}
+								onProgress={this.handleProgress}
+							/>
 							<button type="submit">Create Post</button>
 						</form>
 						<button onClick={this.handleCloseModal}>Close</button>

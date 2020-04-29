@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import {Link} from 'react-router-dom'
-
+import Timestamp from 'react-timestamp'
 export const StyledLink = styled(Link)`
 text-decoration:none;
 `
@@ -52,7 +52,7 @@ color:#fbfbfb;
 	font-weight: bold;
 `
 
-export const StyledData = styled.span`
+export const StyledData = styled(Timestamp)`
 color:#fbfbfb;
 	font-size: 10px;
 	font-weight: bold;

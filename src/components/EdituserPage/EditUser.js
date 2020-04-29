@@ -63,6 +63,22 @@ class EditUser extends Component {
 			});
 	}
 
+	changeCommentsImage = () => {
+		const { currentUser, photoURL } = this.state;
+		firestore().collection('posts')
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(postsDoc => {
+					firestore().collection('posts').doc(postsDoc.id).collection('comments').where("userLink", "==", currentUser.uid)
+						.get().then(querySnapshot => {
+							querySnapshot.forEach(commentDoc => {
+								firestore().collection('posts').doc(postsDoc.id).collection('comments').doc(commentDoc.id)
+									.set({ userAvatar: photoURL }, { merge: true })
+							});
+						});
+				});
+			});
+	}
+
 	handleUploadSuccess = filename => {
 		firebaseStorage().ref('avatars').child(filename).getDownloadURL()
 			.then(url => this.setState({
@@ -72,6 +88,7 @@ class EditUser extends Component {
 			}))
 			.then(() => {this.changeuserImage()})
 			.then(() => {this.changePostsUserImage()})
+			.then(() => { this.changeCommentsImage() })
 	}
 
 	changePostsDefaultImage = () => {
@@ -80,7 +97,23 @@ class EditUser extends Component {
 			.get().then(querySnapshot => {
 				querySnapshot.forEach(doc => {
 					firestore().collection('posts').doc(doc.id)
-					.set({userAvatar: defaultAvatar}, { merge: true })
+						.set({ userAvatar: defaultAvatar }, { merge: true })
+				});
+			});
+	}
+
+	changeCommentsDefaultImage = () => {
+		const { defaultAvatar, currentUser } = this.state;
+		firestore().collection('posts')
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(postsDoc => {
+					firestore().collection('posts').doc(postsDoc.id).collection('comments').where("userLink", "==", currentUser.uid)
+						.get().then(querySnapshot => {
+							querySnapshot.forEach(commentDoc => {
+								firestore().collection('posts').doc(postsDoc.id).collection('comments').doc(commentDoc.id)
+									.set({ userAvatar: defaultAvatar }, { merge: true })
+							});
+						});
 				});
 			});
 	}
@@ -92,6 +125,7 @@ class EditUser extends Component {
 		.then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
 			.then(() => { currentUser.updateProfile({ photoURL: defaultAvatar }) })
 		.then(() => { this.changePostsDefaultImage() })
+			.then(() => { this.changeCommentsDefaultImage() })
 	}
 
 	handleChange = event => {

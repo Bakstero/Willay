@@ -16,7 +16,7 @@ class AllPosts extends Component {
 	onCollectionUpdate = (querySnapshot) => {
 		const posts = [];
 		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
+			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink, postImage } = doc.data();
 			posts.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -29,6 +29,7 @@ class AllPosts extends Component {
 				commentsInPost,
 				dataText,
 				userLink,
+				postImage,
 			});
 		});
 		this.setState({
@@ -55,13 +56,14 @@ class AllPosts extends Component {
 							</div>
 							<StyledInfoContainer>
 								<StyledUserName>{post.UserName}</StyledUserName>
-								<StyledData>{post.dataText}</StyledData>
+								<StyledData relative date={post.dataText}/>
 							</StyledInfoContainer>
 							<StyledInfoContainer button>
 							</StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
 						<Styledcontent>{post.content}</Styledcontent>
+						<img src={post.postImage} />
 					</div>
 					<StyledStatContainer>
 						<Styledcontent>{`likes ${post.likes}`}</Styledcontent>

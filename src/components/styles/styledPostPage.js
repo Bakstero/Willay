@@ -1,5 +1,6 @@
 import styled, {css} from 'styled-components';
 import TextareaAutosize from 'react-textarea-autosize';
+import Timestamp from 'react-timestamp'
 export const Wrapper = styled.div`
 	width:100%;
 	height:100%;
@@ -59,7 +60,7 @@ color:#fbfbfb;
   `}
 `
 
-export const StyledData = styled.span`
+export const StyledData = styled(Timestamp)`
 	color:#fbfbfb;
 	font-size: 10px;
 	font-weight: bold;
