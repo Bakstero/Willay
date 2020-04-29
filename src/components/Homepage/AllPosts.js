@@ -6,10 +6,11 @@ class AllPosts extends Component {
 	constructor(props) {
 		super(props);
 		this.ref = firestore().collection('posts').orderBy("data", "desc");
+		this.Commentref = firestore().collection('posts');
 		this.unsubscribe = null;
+		this.commentUnsubscribe = null;
 		this.state = {
 			posts: [],
-			comment: '',
 		};
 	}
 
@@ -31,6 +32,7 @@ class AllPosts extends Component {
 				userLink,
 				postImage,
 			});
+
 		});
 		this.setState({
 			posts
@@ -70,6 +72,8 @@ class AllPosts extends Component {
 						<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
 					</StyledStatContainer>
 						</StyledLink>
+						<div>
+						</div>
 					</Wrapper>
 				)}
 			</div>

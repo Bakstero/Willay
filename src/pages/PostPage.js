@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { firestore, firebaseAuth } from '../components/Firebase/firebase'
+import { firestore, firebaseAuth, firebaseStorage } from '../components/Firebase/firebase'
 import {Link} from 'react-router-dom'
+import FileUploader from 'react-firebase-file-uploader'
 import { Wrapper,
 	BackDiv,
 	Postdiv,
@@ -40,13 +41,15 @@ class PostPage extends Component {
 			comments: [],
 			key: '',
 			comment: '',
+			commentImage: '',
+			ProgressUpolad: 0,
 		};
 	}
 
 	onCollectionUpdate = (querySnapshot) => {
 		const comments = [];
 		querySnapshot.forEach((doc) => {
-			const { content, userName, dataText, userAvatar, userLink, postImage } = doc.data();
+			const { content, userName, dataText, userAvatar, userLink, postImage, commentImage } = doc.data();
 			comments.push({
 				key: doc.id,
 				doc, // DocumentSnapshot
@@ -56,6 +59,7 @@ class PostPage extends Component {
 				userAvatar,
 				userLink,
 				postImage,
+				commentImage,
 			});
 		});
 		this.setState({
@@ -92,6 +96,16 @@ class PostPage extends Component {
 			})
 	}
 
+	handleUploadSuccess = filename => {
+		firebaseStorage().ref('postsImages').child(filename).getDownloadURL()
+			.then(url => this.setState({
+				commentImage: url,
+				ProgressUpolad: 100,
+				userAvatarEvent: 'Upload success!',
+			}))
+	}
+
+
 	AddComment = event => {
 		event.preventDefault()
 		this.firestore.collection('comments').doc(this.state.data)
@@ -102,6 +116,7 @@ class PostPage extends Component {
 				userName: this.userNameAuth.displayName,
 				userLink: this.auth,
 				userAvatar: this.userNameAuth.photoURL,
+				commentImage: this.state.commentImage,
 			}, { merge: true })
 			.then(() => {this.setState({ comment: '' })})
 			.then(() => {this.AddCommentNumber()})
@@ -132,6 +147,7 @@ class PostPage extends Component {
 				}
 			})
 	}
+
 	disLike = () => {
 		this.firestore.collection('likes').doc(this.auth).delete()
 			.then(() => { this.setState({ comment: '', likeButton: true }) })
@@ -149,6 +165,11 @@ class PostPage extends Component {
 			})
 
 	}
+	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
+	handleOpenModal() {
+		this.setState({ showModal: true });
+	}
+
 
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
@@ -156,7 +177,6 @@ class PostPage extends Component {
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
 		this.GetPostData()
 		this.likeAuth();
-
 	}
 
 	render() {
@@ -204,7 +224,13 @@ class PostPage extends Component {
 								value={this.state.comment}
 							/>
 							<ButtonsCommentContainer>
-								<Button>Image</Button>
+								<FileUploader
+									accept='image/*'
+									name='image'
+									storageRef={firebaseStorage().ref('postsImages')}
+									onUploadSuccess={this.handleUploadSuccess}
+									onProgress={this.handleProgress}
+								/>
 								<Button onClick={this.AddComment}>Post</Button>
 							</ButtonsCommentContainer>
 						</CommentContainer>
@@ -224,6 +250,7 @@ class PostPage extends Component {
 								</ StyledCommentsInfo>
 								<div>
 									<Styledcontent>{comment.content}</Styledcontent>
+									<img src={comment.commentImage} />
 								</div>
 
 							</div>

@@ -4,10 +4,54 @@ import styled from 'styled-components';
 import ReactModal from 'react-modal';
 import FileUploader from 'react-firebase-file-uploader'
 import {firebaseStorage} from '../Firebase/firebase'
-
+import TextareaAutosize from 'react-textarea-autosize';
 const WrapperContainter = styled.div`
-margin-top: 100px;
+margin-top: 10%;
+width:100%;
 `
+
+const Wrapper = styled.div`
+	width:100%;
+	height:100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+`
+const BackContainter = styled.div`
+	width:25%;
+	height:100%;
+	cursor: pointer;
+`
+
+const MainContainer = styled.div`
+width:50%;
+height:100%;
+padding-top:10%;
+background: #202020;
+display: flex;
+flex-direction: column;
+align-items: center;
+`
+
+const Form = styled.form`
+	width:70%;
+	height:80%;
+	text-align: center;
+	border: solid 1px white;
+`
+
+const CommantInput = styled(TextareaAutosize)`
+	width:85%;
+	min-height:40px;
+	overflow: hidden;
+	outline: none;
+	resize: none;
+	background-color: #202020;
+	border:none;
+	color:white;
+`
+
 const Button = styled.button`
 width: 110px;
 height: 45px;
@@ -16,9 +60,14 @@ background: none;
 border: solid 1px #FFC045;
 border-radius: 10px;
 `
+const Img = styled.img`
+	width:85%;
+`
+
 const Modal = styled(ReactModal)`
 	background-color: rgba(0,0,0,.9);
 	height:100%;
+	width:100%;
 	outline: none;
 	display:flex;
 	align-items: center;
@@ -127,29 +176,34 @@ export class CratePost extends React.Component {
 			<WrapperContainter>
 				<Button onClick={this.handleOpenModal} >Add Post</Button>
 				<Modal isOpen={this.state.showModal}>
-					<div>
-						<form onSubmit={this.handleSubmit}>
-							<div>
-								<label>Crate Post</label>
-								<textarea
-									onChange={this.handleChange}
-									placeholder="Write something.."
-									name="UserContent"
-									type="text"
-									value={UserContent}></textarea>
-							</div>
-							<FileUploader
-								accept='image/*'
-								name='image'
-								storageRef={firebaseStorage().ref('postsImages')}
-								onUploadSuccess={this.handleUploadSuccess}
-								onProgress={this.handleProgress}
-							/>
-							<button type="submit">Create Post</button>
-						</form>
-						<button onClick={this.handleCloseModal}>Close</button>
-					</div>
+					<Wrapper>
+						<BackContainter onClick={this.handleCloseModal}/>
+						<MainContainer>
+							<Form onSubmit={this.handleSubmit}>
+									<h1>Crate Post</h1>
+										<CommantInput
+											onChange={this.handleChange}
+											placeholder="Write something.."
+											name="UserContent"
+											type="text"
+											value={UserContent} />
+										<Img src={this.state.postImage} />
+								<div>
+									<FileUploader
+										accept='image/*'
+										name='image'
+										storageRef={firebaseStorage().ref('postsImages')}
+										onUploadSuccess={this.handleUploadSuccess}
+										onProgress={this.handleProgress}
+									/>
+									<button type="submit">Create Post</button>
+								</div>
+							</Form>
+						</MainContainer>
+						<BackContainter onClick={this.handleCloseModal}/>
+					</Wrapper>
 				</Modal>
+
 			</WrapperContainter>
 		)
 	}
