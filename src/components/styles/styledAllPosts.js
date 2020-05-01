@@ -66,3 +66,14 @@ export const Styledcontent = styled.h2`
     margin-left:2%;
   `}
 `
+export const PostImage = styled.img`
+	width: 90%;
+	height:40%;
+`
+export const StyledContentContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items:center;
+	margin-bottom:12px;
+}
+`

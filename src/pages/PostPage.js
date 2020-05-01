@@ -20,6 +20,7 @@ import { Wrapper,
 	CommentsContainter,
 	StyledSpan ,
 	StyledCommentsInfo,
+	PostImage,
 	Button } from '../components/styles/styledPostPage'
 
 
@@ -195,8 +196,8 @@ class PostPage extends Component {
 						</StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
-						<img src={postImage} />
 						<Styledcontent>{content}</Styledcontent>
+						<PostImage src={postImage} />
 					</div>
 					<StyledStatContainer>
 						<Styledcontent >
@@ -249,8 +250,9 @@ class PostPage extends Component {
 									</StyledInfoContainer>
 								</ StyledCommentsInfo>
 								<div>
+									<PostImage src={comment.commentImage} />
 									<Styledcontent>{comment.content}</Styledcontent>
-									<img src={comment.commentImage} />
+									
 								</div>
 
 							</div>

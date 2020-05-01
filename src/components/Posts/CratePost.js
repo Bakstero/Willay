@@ -59,6 +59,7 @@ color: white;
 background: none;
 border: solid 1px #FFC045;
 border-radius: 10px;
+outline:none;
 `
 const Img = styled.img`
 	width:85%;
@@ -158,6 +159,7 @@ export class CratePost extends React.Component {
 		}
 	}
 	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
+	
 	handleOpenModal() {
 		this.setState({ showModal: true });
 	}

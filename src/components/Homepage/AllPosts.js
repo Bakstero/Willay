@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { firestore} from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink } from '../styles/styledAllPosts.js'
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink, PostImage, StyledContentContainer } from '../styles/styledAllPosts.js'
 class AllPosts extends Component {
 	constructor(props) {
 		super(props);
@@ -42,9 +42,7 @@ class AllPosts extends Component {
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
 	}
-	handleChange = event => {
-		this.setState({ [event.target.name]: event.target.value })
-	};
+
 
 	render() {
 		return (
@@ -65,15 +63,15 @@ class AllPosts extends Component {
 					</ StyledPostInfo>
 					<div>
 						<Styledcontent>{post.content}</Styledcontent>
-						<img src={post.postImage} />
 					</div>
+					<StyledContentContainer>
+						<PostImage src={post.postImage} />
+					</StyledContentContainer>
 					<StyledStatContainer>
 						<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
 						<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
 					</StyledStatContainer>
 						</StyledLink>
-						<div>
-						</div>
 					</Wrapper>
 				)}
 			</div>

@@ -145,3 +145,6 @@ export const StyledCommentsInfo = styled.div`
 	margin-top: auto;
 	padding-top: 12px;
 `
+export const PostImage = styled.img`
+	width: 100%;
+`
