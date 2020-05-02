@@ -1,9 +1,9 @@
 import React from 'react'
-import{ firestore, firebaseAuth } from '../firebase/firebase'
+import{ firestore, firebaseAuth } from '../Firebase/firebase'
 import styled from 'styled-components';
 import ReactModal from 'react-modal';
 import FileUploader from 'react-firebase-file-uploader'
-import {firebaseStorage} from '../firebase/firebase'
+import {firebaseStorage} from '../Firebase/firebase'
 import TextareaAutosize from 'react-textarea-autosize';
 const WrapperContainter = styled.div`
 margin-top: 10%;

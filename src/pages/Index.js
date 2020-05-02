@@ -1,5 +1,5 @@
 import React from 'react'
-import Indexx from '../components/homepage/index'
+import Indexx from '../components/Homepage/index'
 
 function Index() {
 	return (

@@ -1,9 +1,9 @@
 import React from 'react'
-import AllUsers from '../components/homepage/AllUsers'
-import AllPosts from '../components/homepage/AllPosts'
+import AllUsers from '../components/Homepage/AllUsers'
+import AllPosts from '../components/Homepage/AllPosts'
 import ChatModal from '../components/Chat/Global/chatModal'
 import Navbar from '../components/layout/Navbar/Navbar'
-import CreatePost from '../components/posts/CratePost'
+import CreatePost from '../components/Posts/CratePost'
 import styled, { css } from 'styled-components';
 import Modal from 'react-modal';
 

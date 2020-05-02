@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { firestore } from '../firebase/firebase';
+import { firestore } from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 const Wrapper = styled.div`

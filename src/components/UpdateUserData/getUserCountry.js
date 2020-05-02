@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CountryDropdown, RegionDropdown} from 'react-country-region-selector';
-import { firestore, firebaseAuth } from '../firebase/firebase'
+import { firestore, firebaseAuth } from '../Firebase/firebase'
 
 export default function GetUserCountry() {
 	const [startcountry, setStartcountry] = useState(null);
@@ -10,6 +10,7 @@ export default function GetUserCountry() {
 		const name = firebaseAuth().currentUser.uid
 		firestore().collection('users').doc(name).set({ country: startcountry, region: startRegion }, { merge: true })
 	}
+
 		return (
 			<form onSubmit={SetUserCountry}>
 				<CountryDropdown

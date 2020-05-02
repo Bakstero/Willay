@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { firestore, firebaseAuth} from '../firebase/firebase'
+import { firestore, firebaseAuth} from '../Firebase/firebase'
 
 function SignUpForm() {
 	const { register, errors, handleSubmit } = useForm()

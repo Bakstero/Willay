@@ -1,5 +1,5 @@
 import React, { Component} from 'react'
-import {  firestore }  from '../components/firebase/firebase'
+import {  firestore }  from '../components/Firebase/firebase'
 import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink, StyledContentContainer, PostImage } from '../components/styles/styledAllPosts'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
@@ -22,7 +22,7 @@ class UserPage extends Component {
 	getPostsData = () => {
 		const posts = [];
 		firestore().collection('posts').where("UserUid", "==", this.props.match.params.id)
-		.get()
+			.get()
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
@@ -48,23 +48,23 @@ class UserPage extends Component {
 
 	getUserData = () => {
 		firestore().collection('users').doc(this.props.match.params.id)
-		.get().then((doc) => {
-			if (doc.exists) {
-				this.setState({
-					user: doc.data(),
-					key: doc.id,
-				});
-			}
-		});
+			.get().then((doc) => {
+				if (doc.exists) {
+					this.setState({
+						user: doc.data(),
+						key: doc.id,
+					});
+				}
+			});
 	}
 
-	componentDidMount () {
+	componentDidMount() {
 		this.getUserData()
 		this.getPostsData()
 	}
 
 	componentDidUpdate() {
-		if (this.props.match.params.id !== this.state.user.userUid ) {
+		if (this.props.match.params.id !== this.state.user.userUid) {
 			this.getUserData()
 			this.getPostsData()
 		}
@@ -76,7 +76,7 @@ class UserPage extends Component {
 	}
 
 	render() {
-		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user
+		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region } = this.state.user
 		return (
 			<div >
 				<Navbar />

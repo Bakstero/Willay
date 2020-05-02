@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
-import {firestore, firebaseAuth} from '../firebase/firebase'
+import {firestore, firebaseAuth} from '../Firebase/firebase'
 
 	export default function  GetUserBirthData()  {
 		const [startDate, setStartDate] = useState(new Date());

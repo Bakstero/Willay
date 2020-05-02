@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { firestore, firebaseAuth, firebaseStorage } from '../components/firebase/firebase'
+import { firestore, firebaseAuth, firebaseStorage } from '../components/Firebase/firebase'
 import {Link} from 'react-router-dom'
 import FileUploader from 'react-firebase-file-uploader'
 import { Wrapper,
@@ -216,7 +216,7 @@ class PostPage extends Component {
 							<Link to={`/user/${this.auth}`}>	<AvatarImg comment src={this.userNameAuth.photoURL} /></Link>
 						</AvatarContainer>
 						<CommentContainer>
-							<CommantInput maxLength="700"
+							<CommantInput maxlength="700"
 								onChange={this.handleChange}
 								name="comment"
 								type="text"
@@ -239,7 +239,7 @@ class PostPage extends Component {
 					<CommentsContainter>
 						<StyledSpan commentTag >All comment</StyledSpan >
 						{this.state.comments.map(comment =>
-							<div key={comment.key}>
+							<div>
 								<StyledCommentsInfo>
 									<div>
 										<Link to={`/user/${comment.userLink}`}><AvatarImg Usercomment src={comment.userAvatar} /></Link>
@@ -252,6 +252,7 @@ class PostPage extends Component {
 								<div>
 									<PostImage src={comment.commentImage} />
 									<Styledcontent>{comment.content}</Styledcontent>
+									
 								</div>
 
 							</div>
