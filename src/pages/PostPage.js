@@ -216,7 +216,7 @@ class PostPage extends Component {
 							<Link to={`/user/${this.auth}`}>	<AvatarImg comment src={this.userNameAuth.photoURL} /></Link>
 						</AvatarContainer>
 						<CommentContainer>
-							<CommantInput maxlength="700"
+							<CommantInput maxLength="700"
 								onChange={this.handleChange}
 								name="comment"
 								type="text"
@@ -239,7 +239,7 @@ class PostPage extends Component {
 					<CommentsContainter>
 						<StyledSpan commentTag >All comment</StyledSpan >
 						{this.state.comments.map(comment =>
-							<div>
+							<div key={comment.key}>
 								<StyledCommentsInfo>
 									<div>
 										<Link to={`/user/${comment.userLink}`}><AvatarImg Usercomment src={comment.userAvatar} /></Link>

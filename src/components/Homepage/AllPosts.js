@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
 import { firestore} from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink, PostImage, StyledContentContainer } from '../styles/styledAllPosts.js'
+import { Styledcontent,
+	Wrapper,
+	StyledPostInfo,
+	StyledUserIcon,
+	StyledUserName,
+	StyledData,
+	StyledInfoContainer,
+	StyledStatContainer,
+	StyledLink,
+	PostImage,
+	StyledContentContainer,
+} from '../styles/styledAllPosts.js'
 class AllPosts extends Component {
 	constructor(props) {
 		super(props);
@@ -48,18 +59,15 @@ class AllPosts extends Component {
 		return (
 			<div>
 				{this.state.posts.map(post =>
-					<Wrapper>
+					<Wrapper key={post.key}>
 						<StyledLink to={`/home/post/${post.data}-${post.UserUid}`}>
 					<StyledPostInfo>
-							<div>
-								<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
-							</div>
-							<StyledInfoContainer>
-								<StyledUserName>{post.UserName}</StyledUserName>
-								<StyledData relative date={post.dataText}/>
-							</StyledInfoContainer>
-							<StyledInfoContainer button>
-							</StyledInfoContainer>
+						<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar}/></Link>
+					<StyledInfoContainer>
+						<StyledUserName>{post.UserName}</StyledUserName>
+						<StyledData relative date={post.dataText}/>
+					</StyledInfoContainer>
+						<StyledInfoContainer button></StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
 						<Styledcontent>{post.content}</Styledcontent>

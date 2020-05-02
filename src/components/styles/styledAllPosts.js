@@ -46,7 +46,7 @@ export const StyledButton = styled.button`
              	-2px -2px 5px #282828;
 `
 
-export const StyledUserName = styled.a`
+export const StyledUserName = styled.span`
 color:#fbfbfb;
 	font-size: 24px;
 	font-weight: bold;

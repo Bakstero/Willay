@@ -55,6 +55,19 @@ export class App extends Component {
           >
             <Route path="/home/post/:id" component={PostPage} />
           </ModalSwitch>
+          <ModalSwitch
+            renderModal={({ open, redirectToBack }) => (
+              <div open={open} scroll="body" onExited={redirectToBack}>
+                <ModalRoute
+                  defaultParentPath={ROUTE.USER}
+                  path={`${ROUTE.USER}/post/:id`}
+                  component={PostPage}
+                />
+              </div>
+            )}
+          >
+            <Route path={`${ROUTE.USER}/post/:id`} component={PostPage} />
+          </ModalSwitch>
           <Switch>
             <Route path={ROUTE.INDEX} exact component={IndexPage} />
             <PrivateRoute authed={this.state.authed} path={ROUTE.USER} component={UserPage}  />

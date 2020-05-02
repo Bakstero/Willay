@@ -13,31 +13,40 @@ const Avatar = styled.img`
 class UserPage extends Component {
 	constructor(props) {
 		super(props);
-		this.ref = firestore().collection('posts').where("UserUid", "==", this.props.match.params.id)
-		this.unsubscribe = null;
 		this.state = {
 			user: {},
 			posts: [],
-			isEdit: false,
-			key: '',
-			data: this.DataInterval,
-			reload: false,
 		};
 	}
 
-	userPrivilege = () => {
-		if (firebaseAuth().currentUser.uid === this.props.match.params.id) {
-			this.setState({
-				isEdit: true,
+	getPostsData = () => {
+		const posts = [];
+		firestore().collection('posts').where("UserUid", "==", this.props.match.params.id)
+		.get()
+			.then(snapshot => {
+				snapshot.forEach(doc => {
+					const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
+					posts.push({
+						key: doc.id,
+						doc, // DocumentSnapshot
+						userAvatar,
+						content,
+						UserName,
+						data,
+						UserUid,
+						likes,
+						commentsInPost,
+						dataText,
+						userLink,
+					});
+				});
+				this.setState({
+					posts
+				});
 			})
-		} else {
-			this.setState({
-				isEdit: false,
-			})
-		}
 	}
 
-	GetUserData = () => {
+	getUserData = () => {
 		firestore().collection('users').doc(this.props.match.params.id)
 		.get().then((doc) => {
 			if (doc.exists) {
@@ -49,39 +58,20 @@ class UserPage extends Component {
 		});
 	}
 
-	onCollectionUpdate = (querySnapshot) => {
-		const posts = [];
-		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink } = doc.data();
-			posts.push({
-				key: doc.id,
-				doc, // DocumentSnapshot
-				userAvatar,
-				content,
-				UserName,
-				data,
-				UserUid,
-				likes,
-				commentsInPost,
-				dataText,
-				userLink,
-			});
-		});
-		this.setState({
-			posts
-		});
+	componentDidMount () {
+		this.getUserData()
+		this.getPostsData()
 	}
 
-
-	componentDidMount () {
-		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-		this.GetUserData()
-		this.userPrivilege()
+	componentDidUpdate() {
+		if (this.props.match.params.id !== this.state.user.userUid ) {
+			this.getUserData()
+			this.getPostsData()
+		}
 	}
 
 	render() {
 		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user
-		const { isEdit, key} = this.state
 		return (
 			<div >
 				<Navbar />
@@ -96,16 +86,6 @@ class UserPage extends Component {
 					<h1>{description}</h1>
 				</div>
 				<div>
-					{isEdit === true
-						?
-						<div>
-							<Link to={`/edit/user/${key}`}><button>Edit</button></Link>
-						</div>
-						:
-						null //In the future, there will be a "add friend" / "remove friend" button
-					}
-				</div>
-				<div>
 					{this.state.posts.map(post =>
 						<Wrapper>
 							< StyledPostInfo>
@@ -117,7 +97,7 @@ class UserPage extends Component {
 									<StyledData>{post.dataText}</StyledData>
 								</StyledInfoContainer>
 								<StyledInfoContainer button>
-									<Link to={`/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
+									<Link to={`${post.userLink}/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
 								</StyledInfoContainer>
 							</ StyledPostInfo>
 							<div>
