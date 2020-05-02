@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { firestore } from '../firebase/firebase';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
-import { logout } from '../logout/index'
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -104,7 +103,6 @@ class AllUsers extends Component {
 							</UserSection>
 						</UserLink>
 					)}
-				<button onClick={logout}>logout</button>
 			</Wrapper>
 		);
 	}

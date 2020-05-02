@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import { firestore, firebaseAuth } from '../../firebase/firebase'
+import { logout } from '../../logout/index'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal';
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
+
+const Wrapper = styled.div`
+	z-index: 100;
+`
 
 const Avatar = styled.img`
 	width: 40px;
@@ -14,10 +19,9 @@ const Avatar = styled.img`
 	}
 `
 const StyledUserModal = styled(Modal)`
-	top: 0%;
-	right:6%;
+	top: 60px;
+	right:250px;
 	width: 40px;
-	z-index: 999;
 	position:fixed;
 	outline:none;
 
@@ -28,19 +32,29 @@ export const StyledLink = styled(Link)`
 `
 
 const StyledButton = styled.button`
-	width:120px;
-	height:40px;
+	width:100%;
+	height:55px;
 	z-index:100;
 	border:none;
-	border-top:1px solid #FFC045;
-	background: none;
+	border-top:1px solid rgba(255,192,69,.5);
+	color:white;
+	background: #202020;
 	outline:none;
-
+	cursor: pointer;
+	${props => props.information && css`
+		border-radius:0px 0px 0px 10px;
+		cursor: auto;
+	`}
+	:hover {
+		background-color:#353535;
+	}
 `
 const StyledContainer = styled.div`
+	width: 300px;
+	height:200px;
 	background-color: #202020;
 	position:fixed;
-	height:19%;
+	height:23%;
 	display:flex;
 	flex-direction:column;
 	justify-content: flex-end;
@@ -75,7 +89,7 @@ export default function UserIcon() {
 	}
 
 		return (
-			<div >
+			<Wrapper>
 				<Avatar onClick={openModal} src={avatar} alt='User Avatar' />
 				<StyledUserModal
 					isOpen={userSettingsIsOpen}
@@ -87,12 +101,13 @@ export default function UserIcon() {
 					}}
 				>
 					<StyledContainer>
-						<StyledButton><StyledLink to={`/user/${user}`}>See your profile</StyledLink></StyledButton>
-						<StyledButton><StyledLink to={`/edit/user/${user}`}>Edit profile</StyledLink></StyledButton>
-						<StyledButton><Span>2020, by Kamil Adamowski</Span></StyledButton>
+						<StyledLink to={`/user/${user}`}><StyledButton>See your profile</StyledButton></StyledLink>
+						<StyledLink to={`/edit/user/${user}`}><StyledButton>Edit profile</StyledButton></StyledLink>
+						<StyledButton onClick={logout}>Log out</StyledButton>
+						<StyledButton information><Span>2020, by Kamil Adamowski</Span></StyledButton>
 					</StyledContainer>
 				</StyledUserModal>
-			</div>
+			</Wrapper>
 		)
 }
 //<Link to={`/user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
