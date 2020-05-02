@@ -10,7 +10,6 @@ export default function GetUserCountry() {
 		const name = firebaseAuth().currentUser.uid
 		firestore().collection('users').doc(name).set({ country: startcountry, region: startRegion }, { merge: true })
 	}
-
 		return (
 			<form onSubmit={SetUserCountry}>
 				<CountryDropdown
