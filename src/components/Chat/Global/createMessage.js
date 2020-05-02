@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { firebaseStorage, firebaseAuth, firestore} from '../../Firebase/firebase'
+import { firebaseStorage, firebaseAuth, firestore} from '../../firebase/firebase'
 import FileUploader from 'react-firebase-file-uploader'
 import TextareaAutosize from 'react-textarea-autosize';
 export class createMessage extends Component {
@@ -88,7 +88,7 @@ export class createMessage extends Component {
 							name="messageContent"
 							type="text"
 							value={messageContent} />
-						<img src={this.state.postImage} />
+						<img src={this.state.postImage} alt="" />
 						<div>
 							<FileUploader
 								accept='image/*'

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { firebaseAuth, firestore, firebaseStorage } from '../Firebase/firebase'
+import { firebaseAuth, firestore, firebaseStorage } from '../firebase/firebase'
 import FileUploader from 'react-firebase-file-uploader'
 
 class EditUser extends Component {

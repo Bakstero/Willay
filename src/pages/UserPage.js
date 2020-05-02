@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
-import { firebaseAuth, firestore }  from '../components/Firebase/firebase'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledButton, StyledStatContainer } from '../components/styles/styledAllPosts'
+import {  firestore }  from '../components/firebase/firebase'
+import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink, StyledContentContainer, PostImage } from '../components/styles/styledAllPosts'
 import Navbar from '../components/layout/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -70,6 +70,11 @@ class UserPage extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.getUserData()
+		this.getPostsData()
+	}
+
 	render() {
 		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region} = this.state.user
 		return (
@@ -87,26 +92,27 @@ class UserPage extends Component {
 				</div>
 				<div>
 					{this.state.posts.map(post =>
-						<Wrapper>
-							< StyledPostInfo>
-								<div>
+						<Wrapper key={post.key}>
+							<StyledLink to={`/user/${this.props.match.params.id}/post/${post.data}-${post.UserUid}`}>
+								<StyledPostInfo>
 									<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
+									<StyledInfoContainer>
+										<StyledUserName>{post.UserName}</StyledUserName>
+										<StyledData relative date={post.dataText} />
+									</StyledInfoContainer>
+									<StyledInfoContainer button></StyledInfoContainer>
+								</ StyledPostInfo>
+								<div>
+									<Styledcontent>{post.content}</Styledcontent>
 								</div>
-								<StyledInfoContainer>
-									<StyledUserName>{post.UserName}</StyledUserName>
-									<StyledData>{post.dataText}</StyledData>
-								</StyledInfoContainer>
-								<StyledInfoContainer button>
-									<Link to={`${post.userLink}/post/${post.data}-${post.UserUid}`}><StyledButton>GO TO POST</StyledButton></Link>
-								</StyledInfoContainer>
-							</ StyledPostInfo>
-							<div>
-								<Styledcontent>{post.content}</Styledcontent>
-							</div>
-							<StyledStatContainer>
-								<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
-								<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
-							</StyledStatContainer>
+								<StyledContentContainer>
+									<PostImage src={post.postImage} />
+								</StyledContentContainer>
+								<StyledStatContainer>
+									<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
+									<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
+								</StyledStatContainer>
+							</StyledLink>
 						</Wrapper>
 					)}
 				</div>

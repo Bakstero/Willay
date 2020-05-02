@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CountryDropdown, RegionDropdown} from 'react-country-region-selector';
-import { firestore, firebaseAuth } from '../Firebase/firebase'
+import { firestore, firebaseAuth } from '../firebase/firebase'
 
 export default function GetUserCountry() {
 	const [startcountry, setStartcountry] = useState(null);

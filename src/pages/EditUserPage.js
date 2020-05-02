@@ -1,7 +1,7 @@
 import React from 'react'
-import EditUser from '../components/EdituserPage/EditUser'
-import GetUserBirthData from '../components/UpdateUserData/getUserBirthData'
-import GetUserCountry from '../components/UpdateUserData/getUserCountry'
+import EditUser from '../components/edituserPage/EditUser'
+import GetUserBirthData from '../components/updateUserData/getUserBirthData'
+import GetUserCountry from '../components/updateUserData/getUserCountry'
 function EditUserPage() {
 	return (
 		<div>

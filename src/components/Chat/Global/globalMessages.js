@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { firestore } from '../../Firebase/firebase'
+import { firestore } from '../../firebase/firebase'
 import Timestamp from 'react-timestamp'
 import styled from 'styled-components';
 

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import PrivateRoute from '../../components/Routing/PrivateRoute'
-import PublicRoute from '../../components/Routing/PublicRoute'
-import {firebaseAuth}  from '../../components/Firebase/firebase'
+import PrivateRoute from '../../components/routing/PrivateRoute'
+import PublicRoute from '../../components/routing/PublicRoute'
+import {firebaseAuth}  from '../../components/firebase/firebase'
 import { ModalSwitch, ModalRoute } from "react-router-modal-gallery";
 import * as ROUTE from  '../../constants/routes'
 import HomePage from '../Home'

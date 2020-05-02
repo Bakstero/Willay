@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import { firestore, firebaseAuth } from '../../Firebase/firebase'
+import React, { useState } from 'react'
+import { firestore, firebaseAuth } from '../../firebase/firebase'
 import { Link } from 'react-router-dom'
+import Modal from 'react-modal';
 import styled from 'styled-components'
 
 const Avatar = styled.img`
@@ -12,40 +13,86 @@ const Avatar = styled.img`
 	height:40px;
 	}
 `
+const StyledUserModal = styled(Modal)`
+	top: 0%;
+	right:6%;
+	width: 40px;
+	z-index: 999;
+	position:fixed;
+	outline:none;
 
-class UserIcon extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			avatar: '',
-			user: '',
-		};
+`
+export const StyledLink = styled(Link)`
+	text-decoration:none;
+	color: white;
+`
+
+const StyledButton = styled.button`
+	width:120px;
+	height:40px;
+	z-index:100;
+	border:none;
+	border-top:1px solid #FFC045;
+	background: none;
+	outline:none;
+
+`
+const StyledContainer = styled.div`
+	background-color: #202020;
+	position:fixed;
+	height:19%;
+	display:flex;
+	flex-direction:column;
+	justify-content: flex-end;
+	border-radius:10px;
+`
+const Span = styled.span`
+	color:white;
+	font-size:10px;
+`
+
+
+export default function UserIcon() {
+	const [avatar, setavatar] = useState()
+	const [user, setuser] = useState()
+	const [userSettingsIsOpen, setUserSettingsOpen] = React.useState(false);
+
+	const userAuth = firebaseAuth().currentUser.uid;
+	firestore().collection('users').doc(userAuth)
+	.get().then((doc) => {
+		if (doc.exists) {
+			setavatar(doc.data().avatar)
+			setuser(userAuth)
+		}
+	});
+
+	function openModal() {
+		setUserSettingsOpen(true);
 	}
 
-	GetUserIcon = () => {
-		const userAuth = firebaseAuth().currentUser.uid;
-		firestore().collection('users').doc(userAuth)
-		.get().then((doc) => {
-			if (doc.exists) {
-				this.setState({
-					avatar: doc.data().avatar,
-					user: userAuth
-				});
-			}
-		});
+	function closeModal() {
+		setUserSettingsOpen(false);
 	}
 
-	componentDidMount() {
-		this.GetUserIcon()
-	}
-
-	render() {
-		const { user, avatar} = this.state
 		return (
 			<div >
-				<Link to={`/user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
+				<Avatar onClick={openModal} src={avatar} alt='User Avatar' />
+				<StyledUserModal
+					isOpen={userSettingsIsOpen}
+					onRequestClose={closeModal}
+					style={{
+						overlay: {
+							backgroundColor: 'none'
+						}
+					}}
+				>
+					<StyledContainer>
+						<StyledButton><StyledLink to={`/user/${user}`}>See your profile</StyledLink></StyledButton>
+						<StyledButton><StyledLink to={`/edit/user/${user}`}>Edit profile</StyledLink></StyledButton>
+						<StyledButton><Span>2020, by Kamil Adamowski</Span></StyledButton>
+					</StyledContainer>
+				</StyledUserModal>
 			</div>
 		)
-	}
 }
-export default UserIcon
+//<Link to={`/user/${user}`}><Avatar src={avatar} alt='User Avatar' /></Link>
