@@ -98,8 +98,8 @@ class EditUser extends Component {
 				querySnapshot.forEach(doc => {
 					firestore().collection('posts').doc(doc.id)
 						.set({ userAvatar: defaultAvatar }, { merge: true })
-				});
 			});
+		});
 	}
 
 	changeCommentsDefaultImage = () => {
