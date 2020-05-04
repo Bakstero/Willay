@@ -92,7 +92,7 @@ class PostPage extends Component {
 				const { commentsInPost } = doc.data();
 				if (doc.exists) {
 					this.firestore
-						.set({commentsInPost: commentsInPost + 1}, { merge: true })
+					.set({commentsInPost: commentsInPost + 1}, { merge: true })
 				}
 			})
 	}
@@ -166,6 +166,7 @@ class PostPage extends Component {
 			})
 
 	}
+
 	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
 	handleOpenModal() {
 		this.setState({ showModal: true });
@@ -252,7 +253,6 @@ class PostPage extends Component {
 								<div>
 									<PostImage src={comment.commentImage} />
 									<Styledcontent>{comment.content}</Styledcontent>
-									
 								</div>
 
 							</div>

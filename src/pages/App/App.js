@@ -47,13 +47,13 @@ export class App extends Component {
               <div open={open} scroll="body" onExited={redirectToBack}>
                 <ModalRoute
                   defaultParentPath={ROUTE.HOME}
-                  path="/home/post/:id"
+                  path={`${ROUTE.HOME}/post/:id`}
                   component={PostPage}
                 />
               </div>
             )}
           >
-            <Route path="/home/post/:id" component={PostPage} />
+            <Route path={`${ROUTE.HOME}/post/:id`} component={PostPage} />
           </ModalSwitch>
           <ModalSwitch
             renderModal={({ open, redirectToBack }) => (

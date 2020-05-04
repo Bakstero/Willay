@@ -32,6 +32,7 @@ export const StyledStatContainer = styled.div`
 
 export const StyledUserIcon = styled.img`
 	width: 60px;
+	height: 60px;
 	border-radius: 50%;
 `
 export const StyledButton = styled.button`

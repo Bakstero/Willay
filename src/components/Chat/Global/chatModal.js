@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import GlobalMessages from './globalMessages'
 import CreateMessage from './createMessage'
+import Link from 're'
 const Wrapper = styled.div`
 	padding:12px;
 	width:800px;
