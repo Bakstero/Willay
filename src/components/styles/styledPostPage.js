@@ -40,17 +40,21 @@ export const Postdiv = styled.div`
 `
 export const AvatarImg = styled.img`
 	width: 60px;
+	height: 60px;
 	border-radius: 50%;
 		outline: none;
 	@media screen and (max-width: 1024px){
 		width: 40px;
+		height: 40px;
 	}
 		${props => props.comment && css`
 		width: 40px;
+		height: 40px;
 		margin-right:20px;
 	`}
 			${props => props.Usercomment && css`
 		width: 40px;
+		height: 40px;
   `}
 
 `
