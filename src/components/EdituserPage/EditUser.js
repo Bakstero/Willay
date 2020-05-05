@@ -22,6 +22,17 @@ class EditUser extends Component {
     this.setState({ userNameEvent: 'Nick changed!', userName: '' })
 	}
 
+	editUserNameGlobalMessage = () => {
+		const { userName, currentUser } = this.state;
+		firestore().collection('globalMessage').where("UserUid", "==", currentUser.uid)
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					firestore().collection('globalMessage').doc(doc.id)
+						.set({ UserName: userName }, { merge: true })
+				});
+			});
+	}
+
 	editUserNamePosts = () => {
     const { userName, currentUser } = this.state;
     firestore().collection('posts').where("UserUid", "==", currentUser.uid)
@@ -40,6 +51,7 @@ class EditUser extends Component {
     } else {
 			this.handleEditUserName()
 			this.editUserNamePosts()
+			this.editUserNameGlobalMessage()
     }
 	}
 
@@ -50,6 +62,17 @@ class EditUser extends Component {
     firestore().collection('users').doc(currentUser.uid)
     .set({avatar: photoURL }, { merge: true })
 			.then(() => { currentUser.updateProfile({ photoURL: photoURL })})
+	}
+
+	changeGlobalMessageUserImage = () => {
+		const { photoURL, currentUser } = this.state;
+		firestore().collection('globalMessage').where("UserUid", "==", currentUser.uid)
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					firestore().collection('globalMessage').doc(doc.id)
+						.set({ userAvatar: photoURL }, { merge: true })
+				});
+			});
 	}
 
 	changePostsUserImage = () => {
@@ -89,6 +112,7 @@ class EditUser extends Component {
 			.then(() => {this.changeuserImage()})
 			.then(() => {this.changePostsUserImage()})
 			.then(() => { this.changeCommentsImage() })
+			.then(() => { this.changeGlobalMessageUserImage() })
 	}
 
 	changePostsDefaultImage = () => {
@@ -99,6 +123,17 @@ class EditUser extends Component {
 					firestore().collection('posts').doc(doc.id)
             .set({ userAvatar: defaultAvatar }, { merge: true })
         });
+			});
+	}
+
+	changeGlobalMessageDefaultImage = () => {
+		const { defaultAvatar, currentUser } = this.state;
+		firestore().collection('globalMessage').where("UserUid", "==", currentUser.uid)
+			.get().then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					firestore().collection('globalMessage').doc(doc.id)
+						.set({ userAvatar: defaultAvatar }, { merge: true })
+				});
 			});
 	}
 
@@ -123,9 +158,10 @@ class EditUser extends Component {
     firestore().collection('users').doc(currentUser.uid)
     .set({avatar: defaultAvatar}, { merge: true })
     .then(() => { this.setState({ defaultAvatarEvent : 'Success you changed the default avatar',})})
-	.then(() => { currentUser.updateProfile({ photoURL: defaultAvatar }) })
+		.then(() => { currentUser.updateProfile({ photoURL: defaultAvatar }) })
     .then(() => { this.changePostsDefaultImage() })
-	.then(() => { this.changeCommentsDefaultImage() })
+		.then(() => { this.changeCommentsDefaultImage() })
+			.then(() => { this.changeGlobalMessageDefaultImage() })
 	}
 
 	handleChange = event => {
