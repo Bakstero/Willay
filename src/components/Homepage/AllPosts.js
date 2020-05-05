@@ -7,8 +7,6 @@ class AllPosts extends Component {
 		super(props);
 		this.ref = firestore().collection('posts').orderBy("data", "desc");
 		this.Commentref = firestore().collection('posts');
-		this.unsubscribe = null;
-		this.commentUnsubscribe = null;
 		this.state = {
 			posts: [],
 		};
@@ -20,7 +18,7 @@ class AllPosts extends Component {
 			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink, postImage } = doc.data();
 			posts.push({
 				key: doc.id,
-				doc, // DocumentSnapshot
+				doc,
 				userAvatar,
 				content,
 				UserName,
@@ -62,7 +60,7 @@ class AllPosts extends Component {
 								<Styledcontent>{post.content}</Styledcontent>
 							</div>
 							<StyledContentContainer>
-								<PostImage src={post.postImage} />
+								<PostImage src={post.postImage} alt="" />
 							</StyledContentContainer>
 							<StyledStatContainer>
 								<Styledcontent>{`likes ${post.likes}`}</Styledcontent>

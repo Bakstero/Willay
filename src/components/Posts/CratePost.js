@@ -1,68 +1,91 @@
 import React from 'react'
 import{ firestore, firebaseAuth } from '../Firebase/firebase'
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ReactModal from 'react-modal';
 import FileUploader from 'react-firebase-file-uploader'
 import {firebaseStorage} from '../Firebase/firebase'
 import TextareaAutosize from 'react-textarea-autosize';
 const WrapperContainter = styled.div`
-margin-top: 10%;
-width:100%;
+	margin-top: 10%;
+	width:100%;
 `
-
 const Wrapper = styled.div`
 	width:100%;
-	height:100%;
+	height:80%;
 	display: flex;
+	align-items: center;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 
 `
-const BackContainter = styled.div`
-	width:25%;
-	height:100%;
-	cursor: pointer;
-`
 
 const MainContainer = styled.div`
-width:50%;
-height:100%;
-padding-top:10%;
-background: #202020;
-display: flex;
-flex-direction: column;
-align-items: center;
+	width:40%;
+	height:100%;
+	background: #202020;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	border-radius: 15px;
+		z-index:11;
 `
 
 const Form = styled.form`
-	width:70%;
-	height:80%;
+	width:90%;
+	height:90%;
 	text-align: center;
-	border: solid 1px white;
+	border: solid 1px  #FFC045;
+	border-radius: 10px;
 `
 
 const CommantInput = styled(TextareaAutosize)`
 	width:85%;
-	min-height:40px;
+	min-height:20px;
 	overflow: hidden;
 	outline: none;
 	resize: none;
-	background-color: #202020;
 	border:none;
 	color:white;
+	background-color: #202020;
+	border-bottom:solid 1px #FFC045 ;
 `
 
 const Button = styled.button`
-width: 110px;
-height: 45px;
-color: white;
-background: none;
-border: solid 1px #FFC045;
-border-radius: 10px;
-outline:none;
+	width: 110px;
+	height: 45px;
+	color: white;
+	background: none;
+	border: solid 1px #FFC045;
+	border-radius: 10px;
+	outline:none;
+	${props => props.createPost && css`
+    background: none;
+    color: #FFC045;
+  `}
+		${props => props.close && css`
+			border-radius: 0px;
+			border: none;
+			background: none;
+			width: 100%;
+			height: 100vh;
+			position:fixed;
+			z-index:1;
+  `}
 `
+
+const ButtonsContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 50px 0px 50px;
+`
+
 const Img = styled.img`
-	width:85%;
+	max-width:100%;
+	max-height: 250px;
 `
 
 const Modal = styled(ReactModal)`
@@ -73,6 +96,10 @@ const Modal = styled(ReactModal)`
 	display:flex;
 	align-items: center;
 	justify-content: center;
+`
+
+const StyledFileUploader = styled(FileUploader)`
+	color: #FFC045;
 `
 
 export class CratePost extends React.Component {
@@ -155,11 +182,11 @@ export class CratePost extends React.Component {
 			commentsInPost,
 			postImage,
 		})
-			this.setState({ createPostModal: false, UserContent: ''})
+			this.setState({ showModal: false, UserContent: '', postImage: '',})
 		}
 	}
 	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
-	
+
 	handleOpenModal() {
 		this.setState({ showModal: true });
 	}
@@ -177,9 +204,9 @@ export class CratePost extends React.Component {
 		return (
 			<WrapperContainter>
 				<Button onClick={this.handleOpenModal} >Add Post</Button>
-				<Modal isOpen={this.state.showModal}>
-					<Wrapper>
-						<BackContainter onClick={this.handleCloseModal}/>
+				<Modal isOpen={this.state.showModal} >
+					<Wrapper >
+						<Button close onClick={this.handleCloseModal}>X</Button>
 						<MainContainer>
 							<Form onSubmit={this.handleSubmit}>
 									<h1>Crate Post</h1>
@@ -189,20 +216,20 @@ export class CratePost extends React.Component {
 											name="UserContent"
 											type="text"
 											value={UserContent} />
-										<Img src={this.state.postImage} />
-								<div>
-									<FileUploader
+								<ButtonsContainer>
+									<StyledFileUploader
 										accept='image/*'
 										name='image'
 										storageRef={firebaseStorage().ref('postsImages')}
 										onUploadSuccess={this.handleUploadSuccess}
 										onProgress={this.handleProgress}
+										metadata={{ cacheControl: 'max-age=3600' }}
 									/>
-									<button type="submit">Create Post</button>
-								</div>
+									<Button createPost type="submit">Create Post</Button>
+								</ButtonsContainer>
+								<Img src={this.state.postImage} />
 							</Form>
 						</MainContainer>
-						<BackContainter onClick={this.handleCloseModal}/>
 					</Wrapper>
 				</Modal>
 

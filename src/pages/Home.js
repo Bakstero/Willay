@@ -11,24 +11,27 @@ const StyledHome = styled.div`
 	width: 100%;
 	height: 100vh;
 	display: flex;
+	flex-direction:column;
+	align-items: center;
 `
 const StyledModal = styled(Modal)`
 	display: flex;
 `
 const NotContainer = styled.div`
-	width: 20%;
-	height: 100vh;
-	display: flex;
-	justify-content:center;
-	margin-left:100px;
 	@media screen and (max-width: 800px){
 		display: none;
 		margin-left:0px;
 	}
 `
+
+const StyledAllUsers = styled.div`
+	width:10%;
+	height:100vh;
+	position:fixed;
+	left:10px;
+`
 const MainBoard = styled.div`
 	width: 40%;
-	margin-left:100px;
 	@media screen and (max-width: 800px){
 		width: 100%;
 		margin-left:0px;
@@ -53,12 +56,7 @@ const GlobalMessageButton = styled.button`
 	color: white;
 	outline:none;
 	box-shadow:  5px 5px 10px #1e1e1e,
-             -5px -5px 10px #222222;
-		${props => props.close && css`
-		bottom:474px;
-		border-radius: 0px;
-		box-shadow:none;
-  `}
+             	-5px -5px 10px #222222;
 `
 
 function Home() {
@@ -75,7 +73,9 @@ function Home() {
 		<StyledHome>
 			<Navbar/>
 			<NotContainer>
-				<AllUsers />
+				<StyledAllUsers>
+					<AllUsers />
+				</StyledAllUsers>
 			</NotContainer>
 			<MainBoard>
 				<CreatePost />
@@ -92,10 +92,10 @@ function Home() {
 						}
 					}}
 				>
-					<GlobalMessageButton close onClick={closeModal}>X</GlobalMessageButton>
 				<ChatModal />
 				</StyledModal>
 			</ModalContainer>
+			<NotContainer></NotContainer>
 		</StyledHome>
 	)
 }

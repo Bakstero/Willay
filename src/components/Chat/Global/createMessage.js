@@ -82,23 +82,24 @@ export class createMessage extends Component {
 			<div>
 				<div>
 					<form onSubmit={this.handleSubmit}>
-						<TextareaAutosize
-							onChange={this.handleChange}
-							placeholder="Write something.."
-							name="messageContent"
-							type="text"
-							value={messageContent} />
-						<img src={this.state.postImage} />
 						<div>
 							<FileUploader
 								accept='image/*'
 								name='image'
 								storageRef={firebaseStorage().ref('globalMessagesImages')}
-		  					onUploadSuccess={this.handleUploadSuccess}
+								onUploadSuccess={this.handleUploadSuccess}
 								onProgress={this.handleProgress}
 							/>
 							<button type="submit">Create Post</button>
 						</div>
+						<TextareaAutosize
+							onChange={this.handleChange}
+							placeholder="Write something.."
+							name="messageContent"
+							type="text"
+							maxlength="100"
+							value={messageContent} />
+						<img src={this.state.postImage} alt="" />
 					</form>
 				</div>
 			</div>

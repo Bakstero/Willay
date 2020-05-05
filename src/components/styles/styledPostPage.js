@@ -14,9 +14,16 @@ export const Wrapper = styled.div`
 `
 
 export const BackDiv = styled.div`
-	width:33%;
-	height:100%;
-	cursor: pointer;
+	border-radius: 0px;
+	border: none;
+	background: none;
+	width: 100%;
+	height: 100vh;
+	position:fixed;
+	z-index:1;
+			@media screen and (max-width: 1024px){
+			display:none;
+	}
 `
 
 export const Postdiv = styled.div`
@@ -25,12 +32,19 @@ export const Postdiv = styled.div`
 	width:50%;
 	display: flex;
 	flex-direction: column;
-	padding:12px;
+		z-index: 999;
+		@media screen and (max-width: 1024px){
+			width:100%
+	}
+
 `
 export const AvatarImg = styled.img`
 	width: 60px;
 	border-radius: 50%;
 		outline: none;
+	@media screen and (max-width: 1024px){
+		width: 40px;
+	}
 		${props => props.comment && css`
 		width: 40px;
 		margin-right:20px;
@@ -38,6 +52,7 @@ export const AvatarImg = styled.img`
 			${props => props.Usercomment && css`
 		width: 40px;
   `}
+
 `
 
 export const StyledPostInfo = styled.div`
@@ -76,9 +91,11 @@ export const Styledcontent = styled.h2`
 export const StyledStatContainer = styled.div`
 	width:100%;
 	border-top: solid 1px #FFC045;
+	background-color: #202020;
 	display:flex;
 `
 export const StyledCommentContainer = styled.div`
+background-color: #202020;
 	width:100%;
 	padding-top:12px;
 	border-top: solid 1px #FFC045;

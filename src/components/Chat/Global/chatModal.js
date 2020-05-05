@@ -2,21 +2,23 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import GlobalMessages from './globalMessages'
 import CreateMessage from './createMessage'
-import Link from 're'
+
 const Wrapper = styled.div`
 	padding:12px;
-	width:800px;
-	height:500px;
+	width:25%;
+	height:80%;
 	position: fixed;
-	right:20px;
+	right:10px;
 	bottom:0;
 	background-color: #202020;
 	border-radius:10px 10px 0px 0px;
 `
+
 const AllMessagesContainer = styled.div`
 	overflow-Y: scroll;
-	height:70%;
+	height:90%;
 `
+
 export class ChatModal extends Component {
 	render() {
 		return (

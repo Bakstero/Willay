@@ -182,7 +182,7 @@ class PostPage extends Component {
 	}
 
 	render() {
-		const { userAvatar, UserName, commentsInPost, dataText, content, likes, userLink, postImage } = this.state.post
+		const { userAvatar, UserName, dataText, content, userLink, postImage } = this.state.post
 		return (
 			< Wrapper >
 				<BackDiv onClick={this.props.history.goBack}></BackDiv>
@@ -209,15 +209,13 @@ class PostPage extends Component {
 								<Button unlike onClick={this.disLike}>UnLike</Button>
 							}
 						</Styledcontent>
-						<Styledcontent comment>{`likes ${likes}`}</Styledcontent>
-						<Styledcontent comment>{`Comments ${commentsInPost}`}</Styledcontent>
 					</StyledStatContainer>
 					<StyledCommentContainer>
 						<AvatarContainer>
 							<Link to={`/user/${this.auth}`}>	<AvatarImg comment src={this.userNameAuth.photoURL} /></Link>
 						</AvatarContainer>
 						<CommentContainer>
-							<CommantInput maxlength="700"
+							<CommantInput maxLength="700"
 								onChange={this.handleChange}
 								name="comment"
 								type="text"

@@ -3,58 +3,59 @@ import { firestore } from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 const Wrapper = styled.div`
+	width: 25%;
 	display: flex;
 	flex-direction: column;
+`
+
+const UserContainer = styled.div`
+	width:100%;
+	display: flex;
+	flex-direction: row;
 	align-items: center;
 `
 
-const UserSection = styled.div`
-	width: 400px;
-	height: 100px;
-	background-color: #202020;
-	border-radius: 10px;
+const Test = styled.div`
+	z-index: 1;
+	margin-left: -40px;
+	width: 0px;
+	height:80px;
+	background: #202020;
+	border-radius: 0px 10px 10px 0px;
+	transition-duration: 0.5s;
 	display: flex;
-	flex-direction:row;
-	margin-top: 20px;
-		@media screen and (max-width: 320px){
-			width: 150px;
-			height: 50px;
-	}
-		@media screen and (max-width: 500px){
-			width: 200px;
-			height: 75px;
-	}
-`
-const InsideSection = styled.div`
-	width: 100%;
-	height: 100px;
-	display: flex;
-	flex-direction:column;
+	flex-direction: row;
 	align-items: center;
-
-		@media screen and (max-width: 320px){
-			font-size: 12px;
-	}
+	justify-content: center;
+	color: rgba(0,0,0,0);
 `
 
-const UserLink = styled(Link)`
-	color: white;
+const StyledImg = styled.img`
+	z-index: 2;
+	width:80px;
+	height:80px;
+	border-radius: 50%;
+	transition-duration: 0.5s;
+`
+
+const StyledLink = styled(Link)`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 5px;
 	text-decoration: none;
+	&:hover ${Test} {
+    	width:200px;
+			transition-duration: 0.5s;
+			color: rgba(255,255,255,1);
+  }
+	&:hover ${StyledImg} {
+		transition-duration: 0.5s;
+		transform: rotate(20deg);
+  }
 `
 
-const UserAvatar = styled.img`
-	width: 100px;
-	height: 100px;
-	border-radius: 10px 0px 0px 10px;
-			@media screen and (max-width: 320px){
-			width: 50px;
-			height: 50px;
-	}
-			@media screen and (max-width: 500px){
-			width: 75px;
-			height: 75px;
-	}
-`
+
 
 class AllUsers extends Component {
 	constructor(props) {
@@ -92,16 +93,14 @@ class AllUsers extends Component {
 			<Wrapper>
 				<h1>All Users</h1>
 					{this.state.users.map(user =>
-						<UserLink to={`/user/${user.key}`} key={`${user.key}`}>
-							<UserSection>
-								<div>
-									<UserAvatar src={user.avatar} alt='' />
-								</div>
-								<InsideSection>
-									<h3>{user.userName}</h3>
-								</InsideSection>
-							</UserSection>
-						</UserLink>
+						<UserContainer>
+							<StyledLink to={`/user/${user.key}`} key={`${user.key}`}>
+								<StyledImg src={user.avatar} />
+								<Test>
+									<h2>{user.userName}</h2>
+								</Test>
+							</StyledLink>
+						</UserContainer>
 					)}
 			</Wrapper>
 		);
