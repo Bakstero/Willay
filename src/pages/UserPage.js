@@ -76,13 +76,12 @@ class UserPage extends Component {
 	}
 
 	render() {
-		const { avatar, userEmail, userName, userBirth, level, rageLevel, description, country, region } = this.state.user
+		const { avatar, userName, userBirth, level, rageLevel, description, country, region } = this.state.user
 		return (
 			<div >
 				<Navbar />
 				<div>
 					<Avatar src={avatar} alt='User Avatar' />
-					<h1>{userEmail}</h1>
 					<h1>{userName}</h1>
 					<h1>{`Birth ${userBirth}`}</h1>
 					<h1>{`Lvl ${level}`}</h1>

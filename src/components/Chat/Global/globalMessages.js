@@ -25,17 +25,15 @@ const StyledTimestamp = styled(Timestamp)`
 export class globalMessages extends Component {
 	constructor(props) {
 		super(props);
+		this.ref = firestore().collection('globalMessage').orderBy("data");
 		this.state = {
 			messages: [],
 		};
 	}
 
-	getAllMessages = () => {
+	getAllMessages = querySnapshot => {
 		const messages = [];
-		firestore().collection('globalMessage').orderBy("data")
-		.get()
-		.then(snapshot => {
-			snapshot.forEach(doc => {
+			querySnapshot.forEach(doc => {
 				const { content, dataText, UserName, messageImage, userAvatar, UserUid } = doc.data();
 				messages.push({
 					key: doc.id,
@@ -51,11 +49,10 @@ export class globalMessages extends Component {
 				messages
 				});
 			})
-		})
 	}
 
 	componentDidMount() {
-		this.getAllMessages()
+		this.unsubscribe = this.ref.onSnapshot(this.getAllMessages);
 	}
 
 	render() {

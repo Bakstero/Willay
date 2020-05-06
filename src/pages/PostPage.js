@@ -38,6 +38,7 @@ class PostPage extends Component {
 			likes: null,
 			commentsInPost: null,
 			likeButton: true,
+			deletePostModal: false,
 			post: [],
 			comments: [],
 			key: '',
@@ -106,7 +107,6 @@ class PostPage extends Component {
 			}))
 	}
 
-
 	AddComment = event => {
 		event.preventDefault()
 		this.firestore.collection('comments').doc(this.state.data)
@@ -157,28 +157,48 @@ class PostPage extends Component {
 
 	likeAuth = () => {
 		this.firestore.collection('likes').doc(this.auth)
-			.get().then((doc) => {
-				if (doc.exists) {
-					this.setState({ likeButton: false })
-				} else {
-					this.setState({ likeButton: true })
-				}
-			})
-
+		.get().then((doc) => {
+			if (doc.exists) {
+				this.setState({ likeButton: false })
+			} else {
+				this.setState({ likeButton: true })
+			}
+		})
 	}
 
 	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
+
 	handleOpenModal() {
 		this.setState({ showModal: true });
 	}
 
+	removePost = () => {
+		this.firestore
+			.get().then((doc) => {
+				const { UserUid } = doc.data();
+				if (doc.exists) {
+					console.log(UserUid)
+					if (UserUid === this.auth) {
+						this.setState({ deletePostModal: true })
+					} else if (this.auth === 'CvGl1eJfvEgUAajV42fLAVXAvnq1') {
+						this.setState({ deletePostModal: true })
+					}
+				}
+			});
+	}
+
+	removePostAction = () => {
+		this.firestore.delete();
+
+	}
 
 	componentDidMount() {
 		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
 		this.dataTextInterval = setInterval(() => this.setState({ dataText: new Date().toLocaleString("en-us") }), 1000)
 		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
-		this.GetPostData()
+		this.GetPostData();
 		this.likeAuth();
+		this.removePost();
 	}
 
 	render() {
@@ -194,6 +214,14 @@ class PostPage extends Component {
 						<StyledInfoContainer>
 							<StyledUserName>{UserName}</StyledUserName>
 							<StyledData relative date={dataText} />
+							<div>
+								{this.state.deletePostModal === true
+									?
+									<button onClick={this.removePostAction}>Delete Post</button>
+									:
+									null
+								}
+							</div>
 						</StyledInfoContainer>
 					</ StyledPostInfo>
 					<div>
@@ -249,8 +277,8 @@ class PostPage extends Component {
 									</StyledInfoContainer>
 								</ StyledCommentsInfo>
 								<div>
-									<PostImage src={comment.commentImage} />
 									<Styledcontent>{comment.content}</Styledcontent>
+									<PostImage comment src={comment.commentImage} />
 								</div>
 
 							</div>

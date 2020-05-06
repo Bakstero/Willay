@@ -29,6 +29,7 @@ function SignUpForm() {
 					description: '',
 				})
 			})
+			.then(() => { firebaseAuth().currentUser.sendEmailVerification()})
 	}
 
 		return (

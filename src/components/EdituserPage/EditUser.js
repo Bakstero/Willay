@@ -11,7 +11,7 @@ class EditUser extends Component {
     userAvatarEvent: '',
     defaultAvatarEvent: '',
     userNameEvent: '',
-    ProgressUpolad: 0,
+		ProgressUpolad: 0,
 	}
 
 	handleEditUserName = () => {
@@ -161,7 +161,14 @@ class EditUser extends Component {
 		.then(() => { currentUser.updateProfile({ photoURL: defaultAvatar }) })
     .then(() => { this.changePostsDefaultImage() })
 		.then(() => { this.changeCommentsDefaultImage() })
-			.then(() => { this.changeGlobalMessageDefaultImage() })
+		.then(() => { this.changeGlobalMessageDefaultImage() })
+	}
+
+	editUserPassword = () => {
+		this.state.currentUser.updatePassword()
+		.then(() => {
+			console.log('success')
+		})
 	}
 
 	handleChange = event => {
@@ -169,7 +176,7 @@ class EditUser extends Component {
 	};
 
 	render() {
-    const { userName, userAvatarEvent, defaultAvatarEvent, userNameEvent, ProgressUpolad } = this.state;
+		const { userName, userAvatarEvent, defaultAvatarEvent, userNameEvent, ProgressUpolad } = this.state;
     return (
 			<div >
         <h1>Edit user</h1>
@@ -204,7 +211,6 @@ class EditUser extends Component {
             <button onClick={this.handleSetDefaultAvatar}>Set default Avatar</button>
             <p>{defaultAvatarEvent}</p>
 					</div>
-
         </div>
 			</div>
     )

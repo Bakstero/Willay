@@ -167,5 +167,8 @@ export const StyledCommentsInfo = styled.div`
 	padding-top: 12px;
 `
 export const PostImage = styled.img`
-	width: 100%;
+	max-width: 60%;
+		${props => props.comment && css`
+    	max-width: 30%;
+  `}
 `

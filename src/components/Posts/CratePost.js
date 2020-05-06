@@ -220,10 +220,11 @@ export class CratePost extends React.Component {
 									<StyledFileUploader
 										accept='image/*'
 										name='image'
+										randomizeFilename
 										storageRef={firebaseStorage().ref('postsImages')}
 										onUploadSuccess={this.handleUploadSuccess}
 										onProgress={this.handleProgress}
-										metadata={{ cacheControl: 'max-age=3600' }}
+										metadata={{ cacheControl: 'max-age=1000' }}
 									/>
 									<Button createPost type="submit">Create Post</Button>
 								</ButtonsContainer>
