@@ -133,8 +133,8 @@ class EditUser extends Component {
 				querySnapshot.forEach(doc => {
 					firestore().collection('globalMessage').doc(doc.id)
 						.set({ userAvatar: defaultAvatar }, { merge: true })
-				});
 			});
+		});
 	}
 
 	changeCommentsDefaultImage = () => {
