@@ -224,7 +224,7 @@ export class CratePost extends React.Component {
 										storageRef={firebaseStorage().ref('postsImages')}
 										onUploadSuccess={this.handleUploadSuccess}
 										onProgress={this.handleProgress}
-										metadata={{ cacheControl: 'max-age=1000' }}
+										metadata={{ cacheControl: 'max-size=1000' }}
 									/>
 									<Button createPost type="submit">Create Post</Button>
 								</ButtonsContainer>

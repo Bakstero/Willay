@@ -70,6 +70,7 @@ const AllPosts = () => {
 			.then(() => { getCommentsNumber(id)})
 	}
 
+
 	const AddLikeNumber = id => {
 		firebasePosts.doc(id)
 		.get().then((doc) => {
@@ -78,10 +79,10 @@ const AllPosts = () => {
 				firebasePosts.doc(id)
 				.set({ likes: likes + 1 }, { merge: true })
 			}
-				})
+			})
 	}
 
-	const GetLike = id => {
+	const giveLike = id => {
 		firebasePosts.doc(id)
 		.collection('likes').doc(user.uid)
 			.set({ userUid: user.uid }, { merge: true })
@@ -126,9 +127,9 @@ const AllPosts = () => {
 							/>
 							<ButtonsCommentContainer>
 								<Button onClick={() => {CreateComment(post.id)}}>Post</Button>
+								<Button onClick={() => { giveLike(post.id) }}>Add like</Button>
 							</ButtonsCommentContainer>
 						</CommentContainer>
-						<Button onClick={() => { GetLike(post.id)}}>Add like</Button>
 					</StyledCommentContainer>
 				</Wrapper>
 			)}
