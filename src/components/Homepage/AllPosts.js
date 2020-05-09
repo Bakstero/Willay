@@ -22,7 +22,7 @@ import { Styledcontent
 	,ButtonsCommentContainer } from '../styles/styledAllPosts.js';
 
 function GetAllPosts() {
-	const [posts, setMessages] = useState([])
+	const [posts, setPosts] = useState([])
 	useEffect(() => {
 		firebase
 			.firestore()
@@ -32,7 +32,7 @@ function GetAllPosts() {
 					id: doc.id,
 					...doc.data(),
 				}))
-				setMessages(posts)
+				setPosts(posts)
 			})
 	}, [])
 	return posts
@@ -56,7 +56,6 @@ const AllPosts = () => {
 				}
 			})
 	}
-
 	const CreateComment = id => {
 		firebasePosts.doc(id)
 		.collection('comments').doc(dataInterval)
@@ -69,6 +68,24 @@ const AllPosts = () => {
 				userAvatar: user.photoURL,
 			}, { merge: true })
 			.then(() => { getCommentsNumber(id)})
+	}
+
+	const AddLikeNumber = id => {
+		firebasePosts.doc(id)
+		.get().then((doc) => {
+			const { likes } = doc.data();
+			if (doc.exists) {
+				firebasePosts.doc(id)
+				.set({ likes: likes + 1 }, { merge: true })
+			}
+				})
+	}
+
+	const GetLike = id => {
+		firebasePosts.doc(id)
+		.collection('likes').doc(user.uid)
+			.set({ userUid: user.uid }, { merge: true })
+			.then(() => { AddLikeNumber(id) })
 	}
 
 	return (
@@ -111,6 +128,7 @@ const AllPosts = () => {
 								<Button onClick={() => {CreateComment(post.id)}}>Post</Button>
 							</ButtonsCommentContainer>
 						</CommentContainer>
+						<Button onClick={() => { GetLike(post.id)}}>Add like</Button>
 					</StyledCommentContainer>
 				</Wrapper>
 			)}
