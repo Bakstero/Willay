@@ -1,77 +1,120 @@
-import React, { Component } from 'react';
-import { firestore} from '../Firebase/firebase';
+import React, { useState, useEffect } from 'react';
+import firebase, { firebaseAuth, firebaseStorage, firestore} from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-import { Styledcontent, Wrapper, StyledPostInfo, StyledUserIcon, StyledUserName, StyledData, StyledInfoContainer, StyledStatContainer, StyledLink, PostImage, StyledContentContainer } from '../styles/styledAllPosts.js'
-class AllPosts extends Component {
-	constructor(props) {
-		super(props);
-		this.ref = firestore().collection('posts').orderBy("data", "desc");
-		this.Commentref = firestore().collection('posts');
-		this.state = {
-			posts: [],
-		};
-	}
+import FileUploader from 'react-firebase-file-uploader'
+import { Styledcontent
+	,Wrapper
+	,StyledPostInfo
+	,StyledUserIcon
+	,StyledUserName
+	,StyledData
+	,StyledInfoContainer
+	,StyledStatContainer
+	,StyledLink
+	,PostImage
+	,StyledCommentContainer
+	,AvatarContainer
+	,AvatarImg
+	,CommentContainer
+	,Button
+	,StyledContentContainer
+	,CommantInput
+	,ButtonsCommentContainer } from '../styles/styledAllPosts.js';
 
-	onCollectionUpdate = (querySnapshot) => {
-		const posts = [];
-		querySnapshot.forEach((doc) => {
-			const { userAvatar, content, UserName, data, dataText, UserUid, likes, commentsInPost, userLink, postImage } = doc.data();
-			posts.push({
-				key: doc.id,
-				doc,
-				userAvatar,
-				content,
-				UserName,
-				data,
-				UserUid,
-				likes,
-				commentsInPost,
-				dataText,
-				userLink,
-				postImage,
-			});
-
-		});
-		this.setState({
-			posts
-		});
-	}
-
-	componentDidMount() {
-		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-	}
-
-
-	render() {
-		return (
-			<div>
-				{this.state.posts.map(post =>
-					<Wrapper key={post.key}>
-						<StyledLink to={`/home/post/${post.data}-${post.UserUid}`}>
-							<StyledPostInfo>
-								<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
-								<StyledInfoContainer>
-									<StyledUserName>{post.UserName}</StyledUserName>
-									<StyledData relative date={post.dataText} />
-								</StyledInfoContainer>
-								<StyledInfoContainer button></StyledInfoContainer>
-							</ StyledPostInfo>
-							<div>
-								<Styledcontent>{post.content}</Styledcontent>
-							</div>
-							<StyledContentContainer>
-								<PostImage src={post.postImage} alt="" />
-							</StyledContentContainer>
-							<StyledStatContainer>
-								<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
-								<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
-							</StyledStatContainer>
-						</StyledLink>
-					</Wrapper>
-				)}
-			</div>
-		);
-	}
+function GetAllPosts() {
+	const [posts, setMessages] = useState([])
+	useEffect(() => {
+		firebase
+			.firestore()
+			.collection("posts").orderBy("data", "desc")
+			.onSnapshot(snapshot => {
+				const posts = snapshot.docs.map(doc => ({
+					id: doc.id,
+					...doc.data(),
+				}))
+				setMessages(posts)
+			})
+	}, [])
+	return posts
 }
 
-export default AllPosts;
+const AllPosts = () => {
+	const posts = GetAllPosts();
+	const user = firebaseAuth().currentUser;
+	const firebasePosts = firestore().collection("posts");
+	const dataInterval = Date.now().toString();
+	const dataTextInterval = new Date().toLocaleString("en-us");
+	const [ comment, setComment ] = useState('')
+
+	const getCommentsNumber = id => {
+		firebasePosts.doc(id)
+			.get().then((doc) => {
+				const { commentsInPost } = doc.data();
+				if (doc.exists) {
+					firebasePosts.doc(id)
+					.set({ commentsInPost: commentsInPost + 1 }, { merge: true })
+				}
+			})
+	}
+
+	const CreateComment = id => {
+		firebasePosts.doc(id)
+		.collection('comments').doc(dataInterval)
+			.set({
+				content: comment,
+				data: dataInterval,
+				dataText: dataTextInterval,
+				userName: user.displayName,
+				userUid: user.uid,
+				userAvatar: user.photoURL,
+			}, { merge: true })
+			.then(() => { getCommentsNumber(id)})
+	}
+
+	return (
+		<div>
+			{posts.map(post =>
+				<Wrapper key={post.key}>
+					<StyledLink to={`/home/post/${post.data}-${post.UserUid}`}>
+						<StyledPostInfo>
+							<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
+							<StyledInfoContainer>
+								<StyledUserName>{post.UserName}</StyledUserName>
+								<StyledData relative date={post.dataText} />
+							</StyledInfoContainer>
+							<StyledInfoContainer button></StyledInfoContainer>
+						</ StyledPostInfo>
+						<div>
+							<Styledcontent>{post.content}</Styledcontent>
+						</div>
+						<StyledContentContainer>
+							<PostImage src={post.postImage} alt="" />
+						</StyledContentContainer>
+						<StyledStatContainer>
+							<Styledcontent>{`likes ${post.likes}`}</Styledcontent>
+							<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
+						</StyledStatContainer>
+					</StyledLink>
+					<StyledCommentContainer>
+						<AvatarContainer>
+							<Link><AvatarImg comment src={firebaseAuth().currentUser.photoURL} /></Link>
+						</AvatarContainer>
+						<CommentContainer>
+							<CommantInput maxLength="700"
+								onChange={e => setComment(e.target.value)}
+								name="comment"
+								type="text"
+								placeholder="Write a comment..."
+								maxRows={9}
+							/>
+							<ButtonsCommentContainer>
+								<Button onClick={() => {CreateComment(post.id)}}>Post</Button>
+							</ButtonsCommentContainer>
+						</CommentContainer>
+					</StyledCommentContainer>
+				</Wrapper>
+			)}
+		</div>
+	)
+}
+export default AllPosts

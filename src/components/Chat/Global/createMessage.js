@@ -1,110 +1,29 @@
-import React, { Component } from 'react'
-import { firebaseStorage, firebaseAuth, firestore} from '../../Firebase/firebase'
-import FileUploader from 'react-firebase-file-uploader'
-import TextareaAutosize from 'react-textarea-autosize';
-export class createMessage extends Component {
-	constructor() {
-		super();
-		this.state = {
-			userAuth: firebaseAuth().currentUser.uid,
-			createPostModal: false,
-			showModal: false,
-			data: '',
-			dataText: '',
-			messageContent: '',
-			UserUid: '',
-			UserName: '',
-			userAvatar: '',
-			messageImage: '',
-			ProgressUpolad: 0,
-		}
-	}
-	formIsEmpty = ({ messageContent }) => {
-		return !messageContent.length;
-	}
+import React from 'react'
+import { firebaseAuth, firestore} from '../../Firebase/firebase'
+import { useForm } from 'react-hook-form'
 
-	isFormValid = () => {
-		if (this.formIsEmpty(this.state)) {
-			return false
-		} else {
-			return true
-		}
-	}
+export default function CreateMessage() {
+	const { register, errors, handleSubmit } = useForm()
 
-	handleSubmit = event => {
-		event.preventDefault()
-		if (this.isFormValid()) {
-			const { messageContent, data, UserName, UserUid, userAvatar, dataText, messageImage } = this.state;
-			firestore().collection('globalMessage').doc(data).set({
-				content: messageContent,
-				data: data,
-				userAvatar,
-				UserName,
-				UserUid,
-				dataText,
-				messageImage,
-			})
-			this.setState({ createPostModal: false, messageContent: '' })
-		}
-	}
-
-	componentDidMount() {
-		this.DataInterval = setInterval(() => this.setState({ data: Date.now().toString() }), 1000)
-		this.dataTextInterval = setInterval(() => this.setState({ dataText: new Date().toLocaleString("en-us") }), 1000)
-		const { userAuth } = this.state;
-		firestore().collection('users').doc(userAuth).get().then((doc) => {
-			if (doc.exists) {
-				this.setState({
-					userAvatar: doc.data().avatar,
-					UserName: doc.data().userName,
-					UserUid: doc.data().userUid,
-				})
-			}
+	const onSubmit = data => {
+		const DataInterval = Date.now().toString()
+		const dataTextInterval = new Date().toLocaleString("en-us")
+		const user = firebaseAuth().currentUser
+		firestore().collection('globalMessage').doc(DataInterval).set({
+			content: data.message,
+			data: DataInterval,
+			dataText: dataTextInterval,
+			UserName: user.displayName,
+			UserUid: user.uid,
+			UserAvatar: user.photoURL,
 		})
 	}
 
-	handleProgress = progress => { this.setState({ ProgressUpolad: progress }) }
-	handleUploadSuccess = filename => {
-		firebaseStorage().ref('globalMessagesImages').child(filename).getDownloadURL()
-			.then(url => this.setState({
-				messageImage: url,
-				ProgressUpolad: 100,
-				userAvatarEvent: 'Upload success!',
-			}))
-	}
-
-	handleChange = event => {
-		this.setState({ [event.target.name]: event.target.value })
-	};
-	render() {
-		const { messageContent } = this.state;
-		return (
-			<div>
-				<div>
-					<form onSubmit={this.handleSubmit}>
-						<div>
-							<FileUploader
-								accept='image/*'
-								name='image'
-								storageRef={firebaseStorage().ref('globalMessagesImages')}
-								onUploadSuccess={this.handleUploadSuccess}
-								onProgress={this.handleProgress}
-							/>
-							<button type="submit">Create Post</button>
-						</div>
-						<TextareaAutosize
-							onChange={this.handleChange}
-							placeholder="Write something.."
-							name="messageContent"
-							type="text"
-							maxlength="100"
-							value={messageContent} />
-						<img src={this.state.postImage} alt="" />
-					</form>
-				</div>
-			</div>
-		)
-	}
+	return (
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<input name="message" type="message" placeholder="Create Message" ref={register({ required: true, })} />
+			{errors.message && 'message is empty'}
+			<button type='submit'>Send</button>
+		</form>
+	)
 }
-
-export default createMessage

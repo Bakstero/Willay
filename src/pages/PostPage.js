@@ -177,7 +177,6 @@ class PostPage extends Component {
 			.get().then((doc) => {
 				const { UserUid } = doc.data();
 				if (doc.exists) {
-					console.log(UserUid)
 					if (UserUid === this.auth) {
 						this.setState({ deletePostModal: true })
 					} else if (this.auth === 'CvGl1eJfvEgUAajV42fLAVXAvnq1') {
@@ -189,7 +188,6 @@ class PostPage extends Component {
 
 	removePostAction = () => {
 		this.firestore.delete();
-
 	}
 
 	componentDidMount() {

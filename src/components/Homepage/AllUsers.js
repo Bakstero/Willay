@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { firestore } from '../Firebase/firebase';
+import React, { useState, useEffect } from 'react';
+import firebase from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 const Wrapper = styled.div`
@@ -54,57 +54,40 @@ const StyledLink = styled(Link)`
 		transform: rotate(20deg);
   }
 `
-
-
-
-class AllUsers extends Component {
-	constructor(props) {
-		super(props);
-		this.ref = firestore().collection('users');
-		this.unsubscribe = null;
-		this.state = {
-			users: []
-		};
-	}
-
-	onCollectionUpdate = (querySnapshot) => {
-		const users = [];
-		querySnapshot.forEach((doc) => {
-			const { avatar, userEmail, userName } = doc.data();
-			users.push({
-				key: doc.id,
-				doc, // DocumentSnapshot
-				avatar,
-				userEmail,
-				userName,
-			});
-		});
-		this.setState({
-			users
-		});
-	}
-
-	componentDidMount() {
-		this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-	}
-
-	render() {
-		return (
-			<Wrapper>
-				<h1>All Users</h1>
-					{this.state.users.map(user =>
-						<UserContainer>
-							<StyledLink to={`/user/${user.key}`} key={`${user.key}`}>
-								<StyledImg src={user.avatar} />
-								<Test>
-									<h2>{user.userName}</h2>
-								</Test>
-							</StyledLink>
-						</UserContainer>
-					)}
-			</Wrapper>
-		);
-	}
+function GetAllUsers() {
+	const [user, setUser] = useState([])
+	useEffect(() => {
+		firebase
+			.firestore()
+			.collection("users")
+			.onSnapshot(snapshot => {
+				const user = snapshot.docs.map(doc => ({
+					id: doc.id,
+					...doc.data(),
+				}))
+				setUser(user)
+			})
+	}, [])
+	return user
 }
 
-export default AllUsers;
+const AllUsers = () => {
+	const user = GetAllUsers()
+
+	return (
+		<Wrapper>
+			<h1>All Users</h1>
+			{user.map(user =>
+				<UserContainer>
+					<StyledLink to={`/user/${user.id}`} key={`${user.key}`}>
+						<StyledImg src={user.avatar} />
+						<Test>
+							<h2>{user.userName}</h2>
+						</Test>
+					</StyledLink>
+				</UserContainer>
+			)}
+		</Wrapper>
+	);
+}
+export default AllUsers

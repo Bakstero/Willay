@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import {Link} from 'react-router-dom'
 import Timestamp from 'react-timestamp'
+import TextareaAutosize from 'react-textarea-autosize';
 export const StyledLink = styled(Link)`
 text-decoration:none;
 `
@@ -77,4 +78,70 @@ export const StyledContentContainer = styled.div`
 	align-items:center;
 	margin-bottom:12px;
 }
+`
+export const StyledCommentContainer = styled.div`
+background-color: #202020;
+	width:100%;
+	padding-top:12px;
+	border-top: solid 1px #FFC045;
+	display:flex;
+`
+export const AvatarContainer = styled.div`
+
+`
+export const ButtonsCommentContainer = styled.div`
+	padding-top:12px;
+	width:100%;
+	display:flex;
+	justify-content: space-between;
+`
+
+export const CommentContainer = styled.div`
+	width:93%;
+	display:flex;
+	flex-direction: column;
+	justify-content: space-around;
+`
+
+export const CommantInput = styled(TextareaAutosize)`
+	min-height:40px;
+	overflow: hidden;
+	outline: none;
+	resize: none;
+	background-color:#323232;
+	border:1px solid rgba(255,192,69,.1);
+	color:white;
+`
+export const Button = styled.button`
+width: 75px;
+height: 25px;
+color: white;
+background: none;
+border:1px solid rgba(255,192,69,.5);
+border-radius: 5px;
+outline: none;
+	${props => props.like && css`
+		background: rgba(255,192,69,1);
+		margin-bottom:12px;
+  `}
+`
+export const AvatarImg = styled.img`
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+		outline: none;
+	@media screen and (max-width: 1024px){
+		width: 40px;
+		height: 40px;
+	}
+		${props => props.comment && css`
+		width: 40px;
+		height: 40px;
+		margin-right:20px;
+	`}
+			${props => props.Usercomment && css`
+		width: 40px;
+		height: 40px;
+  `}
+
 `

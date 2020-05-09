@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import GlobalMessages from './globalMessages'
 import CreateMessage from './createMessage'
@@ -19,8 +19,7 @@ const AllMessagesContainer = styled.div`
 	height:90%;
 `
 
-export class ChatModal extends Component {
-	render() {
+function ChatModal(){
 		return (
 			<Wrapper>
 				<AllMessagesContainer>
@@ -29,7 +28,6 @@ export class ChatModal extends Component {
 					<CreateMessage />
 			</Wrapper>
 		)
-	}
 }
 
 export default ChatModal
