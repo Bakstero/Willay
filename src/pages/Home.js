@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AllUsers from '../components/Homepage/AllUsers'
 import AllPosts from '../components/Homepage/AllPosts'
 import ChatModal from '../components/Chat/Global/chatModal'
 import Navbar from '../components/layout/Navbar/Navbar'
-import CreatePost from '../components/Posts/CratePost'
+import CreatePost from '../components/Posts/createPost'
 import styled from 'styled-components';
 import Modal from 'react-modal';
 
@@ -31,7 +31,7 @@ const StyledAllUsers = styled.div`
 	left:10px;
 `
 const MainBoard = styled.div`
-	width: 40%;
+	width: 35%;
 	@media screen and (max-width: 800px){
 		width: 100%;
 		margin-left:0px;

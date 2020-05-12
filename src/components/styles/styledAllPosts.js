@@ -10,12 +10,12 @@ export const Wrapper = styled.div`
 	width: 100%;
 	background-color:#202020;
 	border-radius: 15px;
-	padding: 12px
 `
 export const StyledPostInfo = styled.div`
 	width: 100%;
 	border-radius: 10px;
 	display: flex;
+		padding: 12px
 }
 `
 export const StyledInfoContainer = styled.div`
@@ -29,6 +29,12 @@ export const StyledInfoContainer = styled.div`
 export const StyledStatContainer = styled.div`
 	border-top: solid 1px #FFC045;
 	display:flex;
+	border-radius: 0px 0px 10px 10px ;
+	padding-left: 12px;
+	margin-top: 24px;
+	${props => props.content && css`
+    	margin-top: 0px;
+  `}
 `
 
 export const StyledUserIcon = styled.img`
@@ -69,7 +75,7 @@ export const Styledcontent = styled.h2`
   `}
 `
 export const PostImage = styled.img`
-	width: 90%;
+	width: 100%;
 	height:40%;
 `
 export const StyledContentContainer = styled.div`

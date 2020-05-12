@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import firebase, { firebaseAuth, firebaseStorage, firestore} from '../Firebase/firebase';
-import { Link } from 'react-router-dom'
+import { dataInterval, dataTextInterval } from '../../constants/dataInterval'
+import { Link, useParams } from 'react-router-dom'
 import FileUploader from 'react-firebase-file-uploader'
 import { Styledcontent
 	,Wrapper
@@ -42,8 +43,6 @@ const AllPosts = () => {
 	const posts = GetAllPosts();
 	const user = firebaseAuth().currentUser;
 	const firebasePosts = firestore().collection("posts");
-	const dataInterval = Date.now().toString();
-	const dataTextInterval = new Date().toLocaleString("en-us");
 	const [ comment, setComment ] = useState('')
 
 	const getCommentsNumber = id => {
@@ -92,7 +91,7 @@ const AllPosts = () => {
 	return (
 		<div>
 			{posts.map(post =>
-				<Wrapper key={post.key}>
+				<Wrapper key={post.id}>
 					<StyledLink to={`/home/post/${post.data}-${post.UserUid}`}>
 						<StyledPostInfo>
 							<Link to={`/user/${post.userLink}`}><StyledUserIcon src={post.userAvatar} /></Link>
@@ -102,9 +101,9 @@ const AllPosts = () => {
 							</StyledInfoContainer>
 							<StyledInfoContainer button></StyledInfoContainer>
 						</ StyledPostInfo>
-						<div>
+						<StyledStatContainer content>
 							<Styledcontent>{post.content}</Styledcontent>
-						</div>
+						</StyledStatContainer>
 						<StyledContentContainer>
 							<PostImage src={post.postImage} alt="" />
 						</StyledContentContainer>
@@ -113,24 +112,6 @@ const AllPosts = () => {
 							<Styledcontent comment>{`Comments ${post.commentsInPost}`}</Styledcontent>
 						</StyledStatContainer>
 					</StyledLink>
-					<StyledCommentContainer>
-						<AvatarContainer>
-							<Link><AvatarImg comment src={firebaseAuth().currentUser.photoURL} /></Link>
-						</AvatarContainer>
-						<CommentContainer>
-							<CommantInput maxLength="700"
-								onChange={e => setComment(e.target.value)}
-								name="comment"
-								type="text"
-								placeholder="Write a comment..."
-								maxRows={9}
-							/>
-							<ButtonsCommentContainer>
-								<Button onClick={() => {CreateComment(post.id)}}>Post</Button>
-								<Button onClick={() => { giveLike(post.id) }}>Add like</Button>
-							</ButtonsCommentContainer>
-						</CommentContainer>
-					</StyledCommentContainer>
 				</Wrapper>
 			)}
 		</div>
