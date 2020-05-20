@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react"
 import firebase, {firebaseAuth} from '../../Firebase/firebase'
-import Timestamp from 'react-timestamp'
-import styled from 'styled-components';
-import { Link } from 'react-router-dom'
 
 function GetGlobalMessage() {
 	const [Messages, setMessages] = useState([])

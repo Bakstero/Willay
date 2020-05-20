@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import firebase from '../Firebase/firebase';
-import { Link } from 'react-router-dom'
+import firebase  from '../Firebase/firebase';
+import { Link, useParams } from 'react-router-dom'
 import Timestamp from 'react-timestamp'
 
 import CreatePost from '../Posts/createPost'
@@ -18,9 +18,8 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		marginTop: '20px',
-		maxWidth: 650,
-		background: '#303030',
+		width: '100%',
+		background: '#202020',
 	},
 	header: {
 		border: '1px',
@@ -30,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 	},
 	modal: {
-		marginTop: '20px',
-		maxWidth: 650,
 		background: 'none',
 		boxShadow: 'none',
 	},
@@ -65,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
 		padding: '12px',
 	},
 	createPost: {
-		display: 'fled',
-		alignItems: 'center',
+		display: 'flex',
+		alignItems: 'flex-start',
 		justifyContent: 'space-between',
 		padding: 0,
 	},
@@ -94,14 +91,13 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-
-
 function GetAllPosts() {
+	const { id } = useParams()
 	const [posts, setPosts] = useState([])
 	useEffect(() => {
 		firebase
 			.firestore()
-			.collection("posts").orderBy("data", "desc")
+			.collection("posts").where('UserUid', '==', id).orderBy("data", "desc")
 			.onSnapshot(snapshot => {
 				const posts = snapshot.docs.map(doc => ({
 					id: doc.id,
@@ -109,10 +105,9 @@ function GetAllPosts() {
 				}))
 				setPosts(posts)
 			})
-		}, [])
+		}, [id])
 	return posts
 }
-
 
 const AllPosts = () => {
 	const classes = useStyles();
@@ -125,7 +120,6 @@ const AllPosts = () => {
 	const handleClose = () => {
 		setOpen(false);
 	};
-
 
 	return (
 		<div>

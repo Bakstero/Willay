@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { firestore, firebaseAuth } from '../Firebase/firebase'
+
+import Button from '@material-ui/core/Button';
+
 function RemovePost() {
+	let history = useHistory();
 	const user = firebaseAuth().currentUser
 	const { id } = useParams()
 	const [deletePost, setDeletePost] = useState(false)
@@ -21,13 +25,21 @@ function RemovePost() {
 
 	const RemovePostAction = () => {
 		firestore().collection('posts').doc(id).delete()
+			.then(() => { history.goBack()})
 		}
 
 	return (
 		<div>
 			{deletePost === true
 				?
-				<button onClick={() => { RemovePostAction() }}>delete</button>
+				<Button
+					fullWidth
+					variant="contained"
+					color="secondary"
+					onClick={() => { RemovePostAction() }}
+				>
+					Delete
+				</Button>
 				:
 				null
 			}

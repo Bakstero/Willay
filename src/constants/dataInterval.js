@@ -1,3 +1,3 @@
 export const dataInterval = Date.now().toString();
+export const dataTextInterval =  Date().toLocaleString("en-us")
 
-export const dataTextInterval = new Date().toLocaleString("en-us");

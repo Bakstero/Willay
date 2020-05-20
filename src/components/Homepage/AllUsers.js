@@ -1,61 +1,122 @@
 import React, { useState, useEffect } from 'react';
 import firebase from '../Firebase/firebase';
 import { Link } from 'react-router-dom'
-import styled from 'styled-components';
-const Wrapper = styled.div`
-	width: 25%;
-	display: flex;
-	flex-direction: column;
-`
 
-const UserContainer = styled.div`
-	width:100%;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-`
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import Badge from '@material-ui/core/Badge';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-const Test = styled.div`
-	z-index: 1;
-	margin-left: -40px;
-	width: 0px;
-	height:80px;
-	background: #202020;
-	border-radius: 0px 10px 10px 0px;
-	transition-duration: 0.5s;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	color: rgba(0,0,0,0);
-`
+const StyledBadge = withStyles((theme) => ({
+	badge: {
+		backgroundColor: '#44b700',
+		color: '#44b700',
+		boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+		'&::after': {
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			borderRadius: '50%',
+			animation: '$ripple 1.2s infinite ease-in-out',
+			border: '1px solid currentColor',
+			content: '""',
+		},
+	},
+	'@keyframes ripple': {
+		'0%': {
+			transform: 'scale(.8)',
+			opacity: 1,
+		},
+		'100%': {
+			transform: 'scale(2.4)',
+			opacity: 0,
+		},
+	},
+}))(Badge);
 
-const StyledImg = styled.img`
-	z-index: 2;
-	width:80px;
-	height:80px;
-	border-radius: 50%;
-	transition-duration: 0.5s;
-`
+const StyledBadgeRed = withStyles((theme) => ({
+	badge: {
+		backgroundColor: '#f44336',
+		color: '#f44336',
+		boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+		'&::after': {
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			borderRadius: '50%',
+			animation: '$ripple 1.2s infinite ease-in-out',
+			border: '1px solid currentColor',
+			content: '""',
+		},
+	},
+	'@keyframes ripple': {
+		'0%': {
+			transform: 'scale(.8)',
+			opacity: 1,
+		},
+		'100%': {
+			transform: 'scale(2.4)',
+			opacity: 0,
+		},
+	},
+}))(Badge);
 
-const StyledLink = styled(Link)`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	margin-top: 5px;
-	text-decoration: none;
-	&:hover ${Test} {
-    	width:200px;
-			transition-duration: 0.5s;
-			color: rgba(255,255,255,1);
-  }
-	&:hover ${StyledImg} {
-		transition-duration: 0.5s;
-		transform: rotate(20deg);
-  }
-`
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		marginTop: '5px',
+		maxWidth: 250,
+		background: 'none',
+		height: 60,
+		boxShadow: 'none'
+	},
+	media: {
+		height: 0,
+		paddingTop: '56.25%', // 16:9
+	},
+	expand: {
+		transform: 'rotate(0deg)',
+		marginLeft: 'auto',
+		transition: theme.transitions.create('transform', {
+			duration: theme.transitions.duration.shortest,
+		}),
+	},
+	expandOpen: {
+		transform: 'rotate(180deg)',
+	},
+	avatar: {
+		backgroundColor: 'none',
+	},
+	postInformation: {
+		display: 'fled',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		padding: '12px',
+		borderBottomStyle: 'solid',
+		borderBottomColor: '#fb8c00',
+		border: '1px',
+	},
+	paper: {
+		position: 'absolute',
+		width: 400,
+		backgroundColor: theme.palette.background.paper,
+		border: '2px solid #000',
+		boxShadow: theme.shadows[5],
+		padding: theme.spacing(2, 4, 3),
+	},
+
+}));
+
 function GetAllUsers() {
 	const [user, setUser] = useState([])
+
 	useEffect(() => {
 		firebase
 			.firestore()
@@ -73,21 +134,73 @@ function GetAllUsers() {
 
 const AllUsers = () => {
 	const user = GetAllUsers()
-
+	const classes = useStyles();
 	return (
-		<Wrapper>
-			<h1>All Users</h1>
+			<div>
 			{user.map(user =>
-				<UserContainer>
-					<StyledLink to={`/user/${user.id}`} key={`${user.key}`}>
-						<StyledImg src={user.avatar} />
-						<Test>
-							<h2>{user.userName}</h2>
-						</Test>
-					</StyledLink>
-				</UserContainer>
+				<div>
+					{user.isActive === true
+						?
+						<Card className={classes.root} >
+							<CardHeader
+								avatar={
+									<StyledBadge
+										overlap="circle"
+										anchorOrigin={{
+											vertical: 'bottom',
+											horizontal: 'right',
+										}}
+										variant="dot"
+									>
+										<Avatar alt="Remy Sharp" src={user.avatar} className={classes.large} />
+									</StyledBadge>
+								}
+								action={
+									<IconButton aria-label="settings" component={Link} to={`/user/${user.userUid}`}>
+										<MoreVertIcon />
+									</IconButton>
+								}
+								title={user.userName}
+							/>
+						</Card>
+						:
+						<Card className={classes.root} >
+							<CardHeader
+								avatar={
+									<StyledBadgeRed
+										overlap="circle"
+										anchorOrigin={{
+											vertical: 'bottom',
+											horizontal: 'right',
+										}}
+										variant="dot"
+									>
+										<Avatar alt="Remy Sharp" src={user.avatar} className={classes.large} />
+									</StyledBadgeRed>
+								}
+								action={
+									<IconButton aria-label="settings" component={Link} to={`/user/${user.userUid}`}>
+										<MoreVertIcon />
+									</IconButton>
+								}
+								title={user.userName}
+							/>
+						</Card>
+					}
+				</div>
 			)}
-		</Wrapper>
+		</div>
 	);
 }
 export default AllUsers
+
+/*
+	<div>
+					<Link to={`/user/${user.id}`} key={`${user.key}`}>
+						<img src={user.avatar} />
+						<div>
+							<h2>{user.userName}</h2>
+						</div>
+					</Link>
+				</div>
+*/

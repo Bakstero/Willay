@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react'
-import {  firestore }  from '../components/Firebase/firebase'
-import { useParams } from 'react-router-dom'
+import React from 'react'
 
-import { mainListItems } from '../components/layout/listItems';
-import { ReactComponent as Logo } from '../components/Static/Icons/logo/Logo.svg'
-import UserIcon from '../components/layout/userIcon'
-import UserPosts from '../components/userPage/userPosts'
+import AllPosts from './AllPosts'
+import AllUsers from './AllUsers'
+import { mainListItems } from '../layout/listItems';
+import { ReactComponent as Logo } from '../Static/Icons/logo/Logo.svg'
+import UserIcon from '../layout/userIcon'
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,15 +13,12 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 	drawerPaper: {
+		position: 'fixed',
 		whiteSpace: 'nowrap',
 		width: drawerWidth,
 		borderColor: '#fb8c00',
@@ -77,61 +74,40 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		height: '100vh',
 		overflow: 'auto',
+
 	},
 	container: {
 		paddingTop: theme.spacing(4),
 		paddingBottom: theme.spacing(4),
 	},
-	papesr: {
-		backgroundColor: '#fff',
+	paper: {
 		display: 'flex',
-		height: '200px'
+		alignItems: 'center',
+		padding: theme.spacing(2),
+		overflow: 'auto',
+		flexDirection: 'column',
+		background: 'none',
+		boxShadow: 'none',
 	},
-	avatar: {
-		width: '100%',
+	fixedHeight: {
 		height: '100%',
-		borderRadius: '5px',
 	},
-	background: {
-		width: '100%',
-		height: '200px',
-		borderRadius: '5px',
-	},
-	containerBackground: {
-		width: '100%',
-		height: '200px',
-		backgroundColor: '#202020',
-		borderRadius: '5px',
-	},
-	test: {
-		backgroundColor: '#303030',
-		borderRadius: '5px',
-	},
+
 }));
 
-const UserPage = () => {
+export default function Dashboard() {
 	const classes = useStyles();
+	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 	const [open, setOpen] = React.useState(false);
-	const [user, setUser] = useState([])
-	const { id } = useParams()
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			const result = await firestore().collection('users').doc(id).get()
-			setUser(result.data())
-		}
-		fetchUser()
-	}, [id])
-
-
 
 	const handleDrawerOpen = () => {
-		if (open === true) {
+		if(open === true) {
 			setOpen(false);
 		} else {
 			setOpen(true);
 		}
 	};
+
 	return (
 		<div className={classes.root} >
 			<CssBaseline />
@@ -161,9 +137,9 @@ const UserPage = () => {
 				<div className={classes.toolbarIcon}>
 					<IconButton onClick={handleDrawerOpen} >
 						{open === false
-							?
-							<Logo />
-							:
+						?
+							<Logo/>
+						:
 							<Logo />
 						}
 					</IconButton>
@@ -171,42 +147,16 @@ const UserPage = () => {
 				<Divider />
 				<List>{mainListItems}</List>
 				<Divider />
+				<List><AllUsers/></List>
 			</Drawer>
 			<main className={classes.content}>
 				<div className={classes.appBarSpacer} />
-				<Container className={classes.container}>
-					<Grid container spacing={2} className={classes.test} >
-						<Grid item xs={12}>
-							<CardMedia image={user.backgroundImage} className={classes.background} />
-						</Grid>
-						<Grid item xs={2}>
-							<CardMedia image={user.avatar} className={classes.avatar} />
-						</Grid>
-						<Grid item xs={3}>
-							<CardContent className={classes.containerBackground}>
-								<Typography color="textPrimary" variant="h4" component="h4">{user.userName}</Typography>
-								<Typography color="textPrimary" variant="h5" component="h5">{`Active - ${user.isActive}`}</Typography>
-								<Typography color="textPrimary" variant="h5" component="h5">{`Level - ${user.level}`}</Typography>
-							</CardContent>
-						</Grid>
-						<Grid item xs={7}>
-							<CardContent className={classes.containerBackground}>
-								<Typography color="textPrimary" variant="h5" component="h5">Awards:</Typography>
-							</CardContent>
-						</Grid>
-						<Grid item xs={5}>
-							<CardContent className={classes.containerBackground}>
-								<Typography color="textPrimary" variant="h5" component="h5">{`Country ${user.country}`}</Typography>
-							</CardContent>
-						</Grid>
-						<Grid item xs={7}>
-							<UserPosts />
-						</Grid>
-					</Grid>
+				<Container maxWidth="lg" className={classes.container}>
+							<Paper className={fixedHeightPaper}>
+								<AllPosts />
+							</Paper>
 				</Container>
 			</main>
 		</div>
 	);
 }
-
-export default UserPage;

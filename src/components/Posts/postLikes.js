@@ -1,11 +1,23 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import { firestore, firebaseAuth } from '../Firebase/firebase'
 
+import Button from '@material-ui/core/Button';
 function PostLikes() {
 	const user = firebaseAuth().currentUser
 	const { id } = useParams()
 	const [likeAuth, setLikeAuth] = useState(true)
+
+	useEffect(()=> {
+		firestore().collection('posts').doc(id).collection('likes').doc(user.uid)
+			.get().then((doc) => {
+				if (doc.exists) {
+					setLikeAuth(false)
+				} else {
+					setLikeAuth(true)
+				}
+			})
+	})
 
 	const AddLikeNumber = () => {
 		firestore().collection('posts').doc(id)
@@ -44,9 +56,23 @@ function PostLikes() {
 		<div>
 			{likeAuth === true
 				?
-				<button onClick={() => { addLike() }}>Like</button>
+				<Button
+					fullWidth
+					variant="contained"
+					color="primary"
+					onClick={() => { addLike() }}
+				>
+					Like
+				</Button>
 				:
-				<button onClick={() => { disLike() }}>disLike</button>
+				<Button
+					fullWidth
+					variant="contained"
+					color="secondary"
+					onClick={() => { disLike() }}
+				>
+					disLike
+				</Button>
 			}
 		</div>
 	)

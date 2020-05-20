@@ -15,7 +15,7 @@
 * React
 * React Router Dom
 * Firebase
-* Styled-Components
+* Material-ui
 
 ## Setup
 
