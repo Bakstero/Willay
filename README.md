@@ -37,4 +37,4 @@ $ yarn start
 * Can add to post like and comment with image
 
 ## Status
-Project is: in progress
+Old project, not up to date.
